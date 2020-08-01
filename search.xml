@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>binSearch</title>
-    <url>/2020/08/01/binSearch/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>Jupyter + Nginx</title>
     <url>/2020/08/01/%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%83%A8%E7%BD%B2Jupyter/</url>
     <content><![CDATA[<p>在服务器上部署Jupyter，使Jupyter成为一个云笔记本</p>
