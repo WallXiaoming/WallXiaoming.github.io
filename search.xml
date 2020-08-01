@@ -1,34 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Hello World</title>
-    <url>/2020/08/01/hello-world/</url>
-    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-]]></content>
-  </entry>
-  <entry>
     <title>Post</title>
-    <url>/2020/08/01/post/</url>
-    <content><![CDATA[<h1 id="Jupyter-Nginx"><a href="#Jupyter-Nginx" class="headerlink" title="Jupyter + Nginx"></a>Jupyter + Nginx</h1><h2 id="1-创建账户并安装Jupyter-和-Nginx"><a href="#1-创建账户并安装Jupyter-和-Nginx" class="headerlink" title="1. 创建账户并安装Jupyter 和 Nginx"></a>1. 创建账户并安装Jupyter 和 Nginx</h2><p>首先创建一个账户：</p>
+    <url>/2020/08/01/%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%83%A8%E7%BD%B2Jupyter/</url>
+    <content><![CDATA[<h2 id="Jupyter-Nginx"><a href="#Jupyter-Nginx" class="headerlink" title="Jupyter + Nginx"></a>Jupyter + Nginx</h2><h3 id="创建账户并安装Jupyter-和-Nginx"><a href="#创建账户并安装Jupyter-和-Nginx" class="headerlink" title="创建账户并安装Jupyter 和 Nginx"></a>创建账户并安装Jupyter 和 Nginx</h3><p>首先创建一个账户：</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">adduser ubuntu</span><br><span class="line"><span class="comment"># 添加到管理组</span></span><br><span class="line">adduser ubuntu sudo</span><br></pre></td></tr></table></figure>
 
 <p>创建脚本，运行一下命令：</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line">sudo apt-get update -y</span><br><span class="line"></span><br><span class="line">sudo apt-get install build-essential libssl-dev libpq-dev libcurl4-gnutls-dev libexpat1-dev gettext unzip -y</span><br><span class="line"></span><br><span class="line">sudo apt-get install supervisor -y</span><br><span class="line"></span><br><span class="line">sudo apt-get install python3-pip python3-dev python3-venv -y</span><br><span class="line"></span><br><span class="line">sudo apt-get install nano -y</span><br><span class="line"></span><br><span class="line">sudo apt-get install git -y</span><br><span class="line"></span><br><span class="line">sudo apt-get install nginx curl -y</span><br><span class="line"></span><br><span class="line">sudo apt-get install ufw -y</span><br><span class="line"></span><br><span class="line">sudo ufw allow <span class="string">&#x27;Nginx Full&#x27;</span></span><br><span class="line"></span><br><span class="line">sudo ufw allow ssh</span><br><span class="line"></span><br><span class="line">sudo python3 -m pip install jupyter</span><br><span class="line"></span><br><span class="line">sudo service supervisor start</span><br><span class="line"></span><br><span class="line">sudo apt autoremove -y</span><br></pre></td></tr></table></figure>
 
 <p>通过ip访问主机： <a href="http://47.100.78.128/">http://47.100.78.128</a> 访问你的主机。应该会出现一个Nginx的初始界面。</p>
-<h2 id="2-进行Jupyter-配置"><a href="#2-进行Jupyter-配置" class="headerlink" title="2. 进行Jupyter 配置"></a>2. 进行Jupyter 配置</h2><p>配置Jupyter config：</p>
+<h3 id="进行Jupyter-配置"><a href="#进行Jupyter-配置" class="headerlink" title="进行Jupyter 配置"></a>进行Jupyter 配置</h3><p>配置Jupyter config：</p>
 <p>生成配置文件：</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">jupyter notebook --generate-config</span><br><span class="line"></span><br><span class="line"><span class="comment"># 生成哈希密码</span></span><br><span class="line">ipython -c <span class="string">&quot;from notebook.auth import passwd; passwd()&quot;</span></span><br></pre></td></tr></table></figure>
 <p>更新配置文件：</p>
@@ -37,7 +19,7 @@
 <p>添加配置到config里面</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">c = get_config()</span><br><span class="line"></span><br><span class="line"><span class="comment"># Kernel config</span></span><br><span class="line">c.IPKernelApp.pylab = <span class="string">&#x27;inline&#x27;</span>  <span class="comment"># if you want plotting support always in your notebook</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Notebook config</span></span><br><span class="line"></span><br><span class="line">c.NotebookApp.allow_origin = <span class="string">&#x27;http://107.21.189.212&#x27;</span> <span class="comment"># put your public IP Address here</span></span><br><span class="line">c.NotebookApp.ip = <span class="string">&#x27;*&#x27;</span></span><br><span class="line">c.NotebookApp.allow_remote_access = True</span><br><span class="line">c.NotebookApp.open_browser = False</span><br><span class="line">c.NotebookApp.password = u<span class="string">&#x27;sha1:45e47cb75d9e:49dc0b09f4e671485b6113c1e2c5a13d7d37fa78&#x27;</span></span><br><span class="line">c.NotebookApp.port = 8888</span><br><span class="line"></span><br><span class="line"><span class="comment"># For https &amp; letsencrypt later</span></span><br><span class="line"><span class="comment"># c.NotebookApp.certfile = u&#x27;/your/cert/path/cert.pem&#x27;</span></span><br><span class="line"><span class="comment"># c.NotebookApp.keyfile = u&#x27;/your/cert/path/privkey.pem&#x27;</span></span><br></pre></td></tr></table></figure>
 
-<h2 id="3-Nginx设置"><a href="#3-Nginx设置" class="headerlink" title="3. Nginx设置"></a>3. Nginx设置</h2><p>这里安装的是Nginx，使用Apache2原理一样只是麻烦点。创建<code>jupyter_config</code>配置文件,名称可以任意：</p>
+<h3 id="Nginx设置"><a href="#Nginx设置" class="headerlink" title="Nginx设置"></a>Nginx设置</h3><p>这里安装的是Nginx，使用Apache2原理一样只是麻烦点。创建<code>jupyter_config</code>配置文件,名称可以任意：</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo nano /etc/nginx/sites-available/jupyter_app.conf</span><br></pre></td></tr></table></figure>
 
 <p>配置如下：</p>
@@ -47,7 +29,7 @@
 <p>启动配置文件。并重启服务器</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo ln -s /etc/nginx/sites-available/jupyter_app.conf /etc/nginx/sites-enabled/jupyter_app.conf</span><br><span class="line"></span><br><span class="line">sudo rm /etc/nginx/sites-enabled/default</span><br><span class="line"></span><br><span class="line">systemctl daemon-reload</span><br><span class="line"></span><br><span class="line">sudo systemctl reload nginx</span><br></pre></td></tr></table></figure>
 
-<h2 id="4-创建后台运行Jupyter"><a href="#4-创建后台运行Jupyter" class="headerlink" title="4. 创建后台运行Jupyter"></a>4. 创建后台运行Jupyter</h2><p>创建配置文件：</p>
+<h3 id="创建后台运行Jupyter"><a href="#创建后台运行Jupyter" class="headerlink" title="创建后台运行Jupyter"></a>创建后台运行Jupyter</h3><p>创建配置文件：</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo nano /etc/supervisor/conf.d/my_jupyter.conf</span><br></pre></td></tr></table></figure>
 
 <p>配置如下：</p>
@@ -57,7 +39,7 @@
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 创建日志</span><br><span class="line">sudo mkdir &#x2F;var&#x2F;log&#x2F;my_jupyter</span><br><span class="line"></span><br><span class="line"># 启动配置</span><br><span class="line">sudo supervisorctl reread</span><br><span class="line">sudo supervisorctl update</span><br></pre></td></tr></table></figure>
 
 
-<h2 id="5-其他"><a href="#5-其他" class="headerlink" title="5. 其他"></a>5. 其他</h2><ol>
+<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><ol>
 <li><p>此方法还可以使用JupyterLab和JupyterHub</p>
 </li>
 <li><p>其他想不起来了</p>
