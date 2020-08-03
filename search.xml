@@ -1,6 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Mac 使用terminal写入img镜像</title>
+    <url>/2020/08/03/Mac%20%E4%BD%BF%E7%94%A8terminal%E5%86%99%E5%85%A5img%E9%95%9C%E5%83%8F/</url>
+    <content><![CDATA[<h2 id="Mac-使用terminal写入img镜像"><a href="#Mac-使用terminal写入img镜像" class="headerlink" title="Mac 使用terminal写入img镜像"></a>Mac 使用terminal写入img镜像</h2><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>首先对U盘进行格式化，利用SD Card Formatter,这款格式化工具可以从SD官网下载。</p>
+<h2 id="操作步骤"><a href="#操作步骤" class="headerlink" title="操作步骤"></a>操作步骤</h2><p>1.进入目录</p>
+<p>插入要写入的sd卡，进入Mac上存放img镜像文件的目录，比如我的就是放在Desktop上的raspberryiso文件夹，那么terminal的命令就是:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~/desktop/rasiberryiso</span><br></pre></td></tr></table></figure>
+
+<p>2.列出目前系统上的所有磁盘</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">diskutil list</span><br></pre></td></tr></table></figure>
+
+<p>在terminal里找到你要写入的磁盘的编号.</p>
+<p>3.推出此磁盘</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># (&lt;disk#&gt;换成你要写入的磁盘编号）</span></span><br><span class="line">diskutil unmountDisk /dev/&lt;disk<span class="comment">#&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+<p>4.用dd命令将树莓派系统镜像写入SD卡</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo dd bs=1m <span class="keyword">if</span>=&lt;your image file name&gt;.img of=/dev/&lt;disk<span class="comment">#&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>输入这个命令后系统会提示你输入密码，此时输入你电脑账户的密码即可。然后开始写入。如果没有载入新的命令行，说明正在写入，这时候就需要耐心等待，有事需要几个小时，根据你文件大小和U盘传输速率来定。</p>
+]]></content>
+  </entry>
+  <entry>
     <title>Jupyter + Nginx</title>
     <url>/2020/08/01/%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%83%A8%E7%BD%B2Jupyter/</url>
     <content><![CDATA[<p>在服务器上部署Jupyter，使Jupyter成为一个云笔记本</p>
