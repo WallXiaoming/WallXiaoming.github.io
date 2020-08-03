@@ -1,6 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Mac 使用terminal写入img镜像</title>
+    <url>/2020/08/03/Mac%20%E4%BD%BF%E7%94%A8terminal%E5%86%99%E5%85%A5img%E9%95%9C%E5%83%8F/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>首先对U盘进行格式化，利用SD Card Formatter,这款格式化工具可以从SD官网下载。</p>
+<h2 id="操作步骤"><a href="#操作步骤" class="headerlink" title="操作步骤"></a>操作步骤</h2><p>1.进入目录</p>
+<p>插入要写入的sd卡，进入Mac上存放img镜像文件的目录，比如我的就是放在Desktop上的raspberryiso文件夹，那么terminal的命令就是:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~/desktop/rasiberryiso</span><br></pre></td></tr></table></figure>
+
+<p>2.列出目前系统上的所有磁盘</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">diskutil list</span><br></pre></td></tr></table></figure>
+
+<p>在terminal里找到你要写入的磁盘的编号.</p>
+<p>3.推出此磁盘</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># (&lt;disk#&gt;换成你要写入的磁盘编号）</span></span><br><span class="line">diskutil unmountDisk /dev/&lt;disk<span class="comment">#&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+<p>4.用dd命令将树莓派系统镜像写入SD卡</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo dd bs=1m <span class="keyword">if</span>=&lt;your image file name&gt;.img of=/dev/&lt;disk<span class="comment">#&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>输入这个命令后系统会提示你输入密码，此时输入你电脑账户的密码即可。然后开始写入。如果没有载入新的命令行，说明正在写入，这时候就需要耐心等待，有事需要几个小时，根据你文件大小和U盘传输速率来定。</p>
+]]></content>
+      <tags>
+        <tag>树莓派</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>MVC 和 MTV的区别</title>
     <url>/2020/08/03/MVC%20%E5%92%8C%20MTV%E7%9A%84%E5%8C%BA%E5%88%AB/</url>
     <content><![CDATA[<h2 id="MVC"><a href="#MVC" class="headerlink" title="MVC"></a>MVC</h2><p>把数据存取逻辑、业务逻辑和表现逻辑组合在一起的概念被称为软件架构的 Model-View-Controller (MVC)模式。 在这个模式中， Model 代表数据存取层，View 代表的是系统中选择显示什么和怎么显示的部分，Controller 指的是系统中根据用户输入并视需要访问模型，以决定使用哪个视图的那部分</p>
@@ -41,28 +66,61 @@
       </tags>
   </entry>
   <entry>
-    <title>Mac 使用terminal写入img镜像</title>
-    <url>/2020/08/03/Mac%20%E4%BD%BF%E7%94%A8terminal%E5%86%99%E5%85%A5img%E9%95%9C%E5%83%8F/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>首先对U盘进行格式化，利用SD Card Formatter,这款格式化工具可以从SD官网下载。</p>
-<h2 id="操作步骤"><a href="#操作步骤" class="headerlink" title="操作步骤"></a>操作步骤</h2><p>1.进入目录</p>
-<p>插入要写入的sd卡，进入Mac上存放img镜像文件的目录，比如我的就是放在Desktop上的raspberryiso文件夹，那么terminal的命令就是:</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~/desktop/rasiberryiso</span><br></pre></td></tr></table></figure>
+    <title>数据库配置和ORM机制</title>
+    <url>/2020/08/03/%E6%95%B0%E6%8D%AE%E5%BA%93%E9%85%8D%E7%BD%AE%E5%92%8CORM%E6%9C%BA%E5%88%B6/</url>
+    <content><![CDATA[<p>首先在setting里面会配置好数据库的信息：这里默认的是使用sqlite3的数据库</p>
+<figure class="highlight py"><table><tr><td class="code"><pre><span class="line">DATABASES = &#123;</span><br><span class="line">    <span class="string">&#x27;default&#x27;</span>: &#123;</span><br><span class="line">        <span class="string">&#x27;ENGINE&#x27;</span>: <span class="string">&#x27;django.db.backends.sqlite3&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;NAME&#x27;</span>: os.path.join(BASE_DIR, <span class="string">&#x27;db.sqlite3&#x27;</span>),</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>2.列出目前系统上的所有磁盘</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">diskutil list</span><br></pre></td></tr></table></figure>
+<p>Python支持这些引擎，详情见： <a href="https://docs.djangoproject.com/en/3.0/ref/settings/#databases">https://docs.djangoproject.com/en/3.0/ref/settings/#databases</a></p>
+<ul>
+<li>‘django.db.backends.postgresql’</li>
+<li>‘django.db.backends.mysql’</li>
+<li>‘django.db.backends.sqlite3’</li>
+<li>‘django.db.backends.oracle’</li>
+</ul>
+<h4 id="切换成MySQL数据库"><a href="#切换成MySQL数据库" class="headerlink" title="切换成MySQL数据库"></a>切换成MySQL数据库</h4><p>首先需要安装MySQL的python驱动库。这里使用mysqlclient</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pip install mysqlclient</span><br></pre></td></tr></table></figure>
 
-<p>在terminal里找到你要写入的磁盘的编号.</p>
-<p>3.推出此磁盘</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># (&lt;disk#&gt;换成你要写入的磁盘编号）</span></span><br><span class="line">diskutil unmountDisk /dev/&lt;disk<span class="comment">#&gt;</span></span><br></pre></td></tr></table></figure>
+<p>然后需要在setting里面更改数据库引擎和配置。</p>
+<figure class="highlight py"><table><tr><td class="code"><pre><span class="line">DATABASES = &#123;</span><br><span class="line">    <span class="string">&#x27;default&#x27;</span>: &#123;</span><br><span class="line">        <span class="string">&#x27;ENGINE&#x27;</span>: <span class="string">&#x27;django.db.backends.mysql&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;NAME&#x27;</span>: <span class="string">&#x27;blog_project&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;USER&#x27;</span>: <span class="string">&#x27;root&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;PASSWORD&#x27;</span>: <span class="string">&#x27;demo9090&#x27;</span>,</span><br><span class="line">        <span class="comment">#  这里可选配置</span></span><br><span class="line">        <span class="comment"># &#x27;HOST&#x27;: &#x27;127.0.0.1&#x27;,</span></span><br><span class="line">        <span class="comment"># &#x27;PORT&#x27;: &#x27;5432&#x27;,</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
-<p>4.用dd命令将树莓派系统镜像写入SD卡</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo dd bs=1m <span class="keyword">if</span>=&lt;your image file name&gt;.img of=/dev/&lt;disk<span class="comment">#&gt;</span></span><br></pre></td></tr></table></figure>
 
-<p>输入这个命令后系统会提示你输入密码，此时输入你电脑账户的密码即可。然后开始写入。如果没有载入新的命令行，说明正在写入，这时候就需要耐心等待，有事需要几个小时，根据你文件大小和U盘传输速率来定。</p>
+<p>然后利用Navicat连接数据库，之后创建数据库。<br><img src="https://blogmypic.oss-cn-beijing.aliyuncs.com/img/20200803150514.png"></p>
+<p>接下来进行表单同步：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">python manage.py makemigrations</span><br><span class="line">python manage.py migrate</span><br></pre></td></tr></table></figure>
+
+<p>同步表单后就可以看到表单数据了。</p>
+<p><img src="https://blogmypic.oss-cn-beijing.aliyuncs.com/img/20200803150525.png"></p>
+<h4 id="ORM机制"><a href="#ORM机制" class="headerlink" title="ORM机制"></a>ORM机制</h4><p><img src="https://blogmypic.oss-cn-beijing.aliyuncs.com/img/20200803150552.png"></p>
+<p>对象关系映射(英语:Object Relational Mapping,简称ORM)，用于实现面向对象编程语言里不同类型系统的数据之间的转换.换句说，就是用面向对象的方式去操作数据库的创建表，增加、修改、删除、查询等操作</p>
+<p>比如： 可以在QuerySet中调用query属性</p>
+<p>在<code>views.py</code>中：</p>
+<figure class="highlight py"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span>(<span class="params">request</span>):</span></span><br><span class="line">    user_list = User.Objects.all()</span><br><span class="line">    print(user_list.query)</span><br><span class="line">    <span class="keyword">return</span> render(request, <span class="string">&quot;blog/index.html&quot;</span>, &#123;<span class="string">&quot;user&quot;</span>: user_list&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>这样会得到一套sql语句，然后再Navicat中查询一下query(询问)</p>
+<p><img src="https://blogmypic.oss-cn-beijing.aliyuncs.com/img/20200803150607.png"></p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="string">`auth_user`</span>.<span class="string">`id`</span>, <span class="string">`auth_user`</span>.<span class="string">`password`</span>, <span class="string">`auth_user`</span>.<span class="string">`last_login`</span>, <span class="string">`auth_user`</span>.<span class="string">`is_superuser`</span>, <span class="string">`auth_user`</span>.<span class="string">`username`</span>, <span class="string">`auth_user`</span>.<span class="string">`first_name`</span>, <span class="string">`auth_user`</span>.<span class="string">`last_name`</span>, <span class="string">`auth_user`</span>.<span class="string">`email`</span>, <span class="string">`auth_user`</span>.<span class="string">`is_staff`</span>, <span class="string">`auth_user`</span>.<span class="string">`is_active`</span>, <span class="string">`auth_user`</span>.<span class="string">`date_joined`</span> <span class="keyword">FROM</span> <span class="string">`auth_user`</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>查询结果</p>
+<p><img src="https://blogmypic.oss-cn-beijing.aliyuncs.com/img/20200803150626.png"></p>
+<p>ORM优缺点</p>
+<ol>
+<li><p>ORM使得我们通过数据库交互变的简单易行，并且完全不用考虑该死的SQL语句，快速开发，由此而来</p>
+</li>
+<li><p>可以避免一些你搜程序猿写sql语句带来的性能和效率问题</p>
+</li>
+</ol>
+<p>缺点：</p>
+<ol>
+<li><p>性能有所牺牲。不过现在的各种ORM框架都在尝试使用各种方法来减轻这个问题(LazyLoad，Cache)，效果还是很显著的</p>
+</li>
+<li><p>对于个别复杂查询，ORM仍然力不从心。为了 解决这个问题，ORM框架一般也提供了直接原生sql的方式</p>
+</li>
+</ol>
 ]]></content>
       <tags>
-        <tag>树莓派</tag>
+        <tag>django</tag>
       </tags>
   </entry>
   <entry>
