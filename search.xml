@@ -1,6 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>MVC 和 MTV的区别</title>
+    <url>/2020/08/03/MVC%20%E5%92%8C%20MTV%E7%9A%84%E5%8C%BA%E5%88%AB/</url>
+    <content><![CDATA[<h2 id="MVC"><a href="#MVC" class="headerlink" title="MVC"></a>MVC</h2><p>把数据存取逻辑、业务逻辑和表现逻辑组合在一起的概念被称为软件架构的 Model-View-Controller (MVC)模式。 在这个模式中， Model 代表数据存取层，View 代表的是系统中选择显示什么和怎么显示的部分，Controller 指的是系统中根据用户输入并视需要访问模型，以决定使用哪个视图的那部分</p>
+<p><img src="https://blogmypic.oss-cn-beijing.aliyuncs.com/img/20200803141443.png"></p>
+<h2 id="MTV"><a href="#MTV" class="headerlink" title="MTV"></a>MTV</h2><p>利用MVC去理解django的MTV</p>
+<table>
+<thead>
+<tr>
+<th align="left"></th>
+<th align="left"></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">M 代表模型（Model）</td>
+<td align="left">数据存取层。 该层处理与数据相关的所有事务： 如何存取、如何验证有效性、包含哪些行为以及数据之间的关系等。与MVC中的M功能相同，负责数据处理，内嵌了ORM框架。 负责业务对象和数据库的关系映射。</td>
+</tr>
+<tr>
+<td align="left">T 代表模板(Template)</td>
+<td align="left">表现层。 该层处理与表现相关的决定： 如何在页面或其他类型文档中进行显示。与MVC中的V功能相同，负责封装构造要返回的html，内嵌了模板引擎。 如何把页面展示给用户HTML</td>
+</tr>
+<tr>
+<td align="left">V 代表视图（View）</td>
+<td align="left">业务逻辑层。 该层包含存取模型及调取恰当模板的相关逻辑。 你可以把它看作模型与模板之间的桥梁。与MVC中的C功能相同，接收HttpRequest，业务处理，返回HttpResponse。 负责业务逻辑，调用Model和Template</td>
+</tr>
+</tbody></table>
+<p><img src="https://blogmypic.oss-cn-beijing.aliyuncs.com/img/20200803141457.png"></p>
+<ol>
+<li>web服务器(mid)收到一个http请求</li>
+<li>django在URL_conf里面找到对应的视图(view)函数处理http请求</li>
+<li>视图函数调用相应的数据模型来存取数据，调用相应的模板向用户展现页面</li>
+<li>视图函数处理结束后返回http的响应给web服务器</li>
+<li>web服务器讲响应发给客户端</li>
+</ol>
+<p><img src="https://blogmypic.oss-cn-beijing.aliyuncs.com/img/20200803141513.png"></p>
+]]></content>
+      <tags>
+        <tag>django</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Mac 使用terminal写入img镜像</title>
     <url>/2020/08/03/Mac%20%E4%BD%BF%E7%94%A8terminal%E5%86%99%E5%85%A5img%E9%95%9C%E5%83%8F/</url>
     <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>首先对U盘进行格式化，利用SD Card Formatter,这款格式化工具可以从SD官网下载。</p>
