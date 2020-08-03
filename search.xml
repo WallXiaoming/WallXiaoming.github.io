@@ -3,7 +3,7 @@
   <entry>
     <title>Mac 使用terminal写入img镜像</title>
     <url>/2020/08/03/Mac%20%E4%BD%BF%E7%94%A8terminal%E5%86%99%E5%85%A5img%E9%95%9C%E5%83%8F/</url>
-    <content><![CDATA[<h2 id="Mac-使用terminal写入img镜像"><a href="#Mac-使用terminal写入img镜像" class="headerlink" title="Mac 使用terminal写入img镜像"></a>Mac 使用terminal写入img镜像</h2><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>首先对U盘进行格式化，利用SD Card Formatter,这款格式化工具可以从SD官网下载。</p>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>首先对U盘进行格式化，利用SD Card Formatter,这款格式化工具可以从SD官网下载。</p>
 <h2 id="操作步骤"><a href="#操作步骤" class="headerlink" title="操作步骤"></a>操作步骤</h2><p>1.进入目录</p>
 <p>插入要写入的sd卡，进入Mac上存放img镜像文件的目录，比如我的就是放在Desktop上的raspberryiso文件夹，那么terminal的命令就是:</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~/desktop/rasiberryiso</span><br></pre></td></tr></table></figure>
