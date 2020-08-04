@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    
+    <title>
+        动态规划 - 完全背包 | Blog
+    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+        <link rel="shortcut icon" href="/images/favicon.jpg">
+    
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <script id="hexo-configurations">
+    let CONFIG = {"hostname":"wallxiaoming.github.io","root":"/","localsearch":{"enable":true,"trigger":"auto","unescape":false,"preload":false},"themeInfo":{"name":"ILS","version":"1.1.2","author":"XPoet","repository":"https://github.com/XPoet/hexo-theme-ils"},"path":"search.xml"};
+  </script>
+<meta name="generator" content="Hexo 5.0.0"></head>
+
+
+<body>
+<div class="page-template">
+    <div class="page-top">
+        <header class="header-wrapper">
+
+    <div class="header-progress"></div>
+
+    <div class="header-content">
+
+        <a class="logo-title" href="/">
+            Blog
+        </a>
+
+        <ul class="menu-list">
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/"
+                    >
+                        HOME
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/archives"
+                    >
+                        ARCHIVES
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/about"
+                    >
+                        ABOUT
+                    </a>
+                </li>
+            
+        </ul>
+
+        <div class="menu-bar">
+            <div class="menu-bar-middle"></div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item">
+                    <a class=""
+                       href="/">HOME</a>
+                </li>
+            
+                <li class="drawer-menu-item">
+                    <a class=""
+                       href="/archives">ARCHIVES</a>
+                </li>
+            
+                <li class="drawer-menu-item">
+                    <a class=""
+                       href="/about">ABOUT</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+    </div>
+
+    <div class="page-middle ">
+
+        <main class="main-content normal-code-theme">
+
+            <div class="main-content-left">
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <h3><a class="title-hover-animation">动态规划 - 完全背包</a></h3>
+        </div>
+
+        <div class="meta-info">
+            <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa fa-calendar-o"></i> 2020-08-04 10:11:32
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa fa-folder"></i>
+            <ul>
+                
+                    <li>
+                        <a href="/categories/%E7%AE%97%E6%B3%95/">算法</a>
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa fa-tags"></i>
+            <ul>
+                
+                    <li>
+                        <a href="/tags/%E7%AE%97%E6%B3%95/">算法</a>
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/%E7%AE%97%E6%B3%95%E5%9F%BA%E7%A1%80/">算法基础</a>
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">动态规划</a>
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+</div>
+        </div>
+
+        <div class="article-content markdown-body">
+            <hr>
+<p>Acwing: 需要登录账号密码，在群里可见</p>
+<p>来源： <a target="_blank" rel="noopener" href="https://www.acwing.com/problem/content/3/">https://www.acwing.com/problem/content/3/</a></p>
+<p>推荐视频讲解： <a target="_blank" rel="noopener" href="https://www.acwing.com/video/324/">https://www.acwing.com/video/324/</a></p>
+<p>题目描述：</p>
+<p>有 N 种物品和一个容量是 V 的背包，每种物品都有无限件可用。</p>
+<p>第 i 种物品的体积是 vi，价值是 wi。</p>
+<p>求解将哪些物品装入背包，可使这些物品的总体积不超过背包容量，且总价值最大。<br>输出最大价值。</p>
+<p>PS: 完全背包和01背包的区别就是01背包只能选一件，完全背包可以选无数件</p>
+<hr>
+<p>闫氏DP法：</p>
+<p><img src="https://blogmypic.oss-cn-beijing.aliyuncs.com/img/20200804210759.png"></p>
+<p>状态计算就是状态方程，所以： $f[i][j] = max(f[i - 1][j], f[i - 1][j - v[i]] + w[i], f[i - 1][j - 2<em>v[i] + 2</em>w[i],…<br>, f[i - 1][j - k*v[i] + k * w[i])$   这里$j - K * v[i] &gt;= 0$</p>
+<p>伪代码如下：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> i &lt;- <span class="number">1</span> to n:</span><br><span class="line">    <span class="keyword">for</span> j &lt;- <span class="number">1</span> to m:</span><br><span class="line">        <span class="keyword">for</span> k &lt;- <span class="number">0</span> to j - k*v[i] &gt; <span class="number">0</span>:</span><br><span class="line">            f[i][j] = max(f[i - <span class="number">1</span>][j], f[i - <span class="number">1</span>][j - k * v[i]] + k * w[i])</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>Python 实现如下(超时)：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">N = <span class="number">1010</span></span><br><span class="line">dp, v, w = [[<span class="number">0</span>]*N <span class="keyword">for</span> _ <span class="keyword">in</span> range(N)], [<span class="number">0</span>]*N, [<span class="number">0</span>]*N</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span>():</span></span><br><span class="line">    n, m = map(int, input().split())</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, n + <span class="number">1</span>):</span><br><span class="line">        v[i], w[i] = map(int, input().split())</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, n + <span class="number">1</span>):</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">1</span>, m + <span class="number">1</span>):</span><br><span class="line">            k = <span class="number">0</span></span><br><span class="line">            <span class="keyword">while</span> k * v[i] &lt;= j:</span><br><span class="line">                dp[i][j] = max(dp[i][j], dp[i - <span class="number">1</span>][j - k * v[i]] + k * w[i])</span><br><span class="line">                k += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    print(dp[n][m])</span><br><span class="line"></span><br><span class="line">main()</span><br></pre></td></tr></table></figure>
+
+<p>在此进行优化一下：<br>$f[i][j] = max(f[i][j], f[i- 1][j – v] + w, f[i - 1][j - 2v] + 2w, … f[i - 1][j - kv] + kw)$<br>$f[i][j - v] = max(f[i][j - v], f[i- 1][j – 2v] + w, f[i - 1][j - 3v] + 2w, … f[i - 1][j - kv] + (k - 1)w)$</p>
+<p><img src="https://blogmypic.oss-cn-beijing.aliyuncs.com/img/20200804210812.png"></p>
+<p>这里的运算是取最大值, 所以红框里面部分只相差一个w[i] 所以状态方程就可以写成为:<br>$f[i][j] = max(f[i - 1][j], f[i][j - v[i]] + w[i])$</p>
+<p>01背包状态方程式：<br>$f[i][j] = max(f[i - 1][j], f[i - 1][j - v[i]] + w[i])$</p>
+<p>不同点在于01背包是i - 1， 而完全背包是i</p>
+<p>所以伪代码如下(类似于01背包)：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> i &lt;- <span class="number">1</span> to n:</span><br><span class="line">    <span class="keyword">for</span> j &lt;- <span class="number">1</span> to m:</span><br><span class="line">        f[i][j] = f[i - <span class="number">1</span>][j]</span><br><span class="line">        <span class="keyword">if</span> v[i] &lt;= j:</span><br><span class="line">            <span class="comment"># 只是这里变成了i</span></span><br><span class="line">            f[i][j] = max(f[i][j], f[i][j - v[i]] + w[i]</span><br></pre></td></tr></table></figure>
+
+<p>Python实现：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">N = <span class="number">1010</span></span><br><span class="line">dp = [[<span class="number">0</span>]*N <span class="keyword">for</span> _ <span class="keyword">in</span> range(N)]</span><br><span class="line">w = [<span class="number">0</span>]*N</span><br><span class="line">v = [<span class="number">0</span>]*N</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span>():</span></span><br><span class="line">    n, m = map(int, input().split())</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, n + <span class="number">1</span>):</span><br><span class="line">        v[i], w[i] = map(int, input().split())</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, n + <span class="number">1</span>):</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">1</span>, m + <span class="number">1</span>):</span><br><span class="line">            dp[i][j] = dp[i - <span class="number">1</span>][j]</span><br><span class="line">            <span class="keyword">if</span> v[i] &lt;= j:</span><br><span class="line">                dp[i][j] = max(dp[i][j], dp[i][j - v[i]] + w[i])</span><br><span class="line"></span><br><span class="line">    print(dp[n][m])</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">main()</span><br></pre></td></tr></table></figure>
+
+<p>同样也可以优化为一维，由于是f[i][j]需要的是f[i][j - v[i]]的状态，所以，只需要在使用前计算更新计算过第i层就行了。只要从小到大开始枚举，那么所在层数的j - v[i]是更新过了的，也就是第i层</p>
+<p>伪代码如下：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> i &lt;- <span class="number">1</span> to n:</span><br><span class="line">    <span class="keyword">for</span> j &lt;- v[i] to m:</span><br><span class="line">        f[j] = max(f[j], f[j - v[i]] + w[i]</span><br></pre></td></tr></table></figure>
+<p>代码和01背包的写法非常类似，只是循环一个是从前，一个是从后。</p>
+<p>Python实现</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">N = <span class="number">1010</span></span><br><span class="line">dp, w, v = [<span class="number">0</span>]*N, [<span class="number">0</span>]*N, [<span class="number">0</span>]*N</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span>():</span></span><br><span class="line">    n, m = map(int, input().split())</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, n + <span class="number">1</span>):</span><br><span class="line">        v[i], w[i] = map(int, input().split())</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, n + <span class="number">1</span>):</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> range(v[i], m + <span class="number">1</span>):  <span class="comment"># 只是这里和01代码有所不同</span></span><br><span class="line">           dp[j] = max(dp[j], dp[j - v[i]] + w[i])</span><br><span class="line"></span><br><span class="line">    print(dp[m])</span><br><span class="line"></span><br><span class="line">main()</span><br></pre></td></tr></table></figure>
+
+        </div>
+
+        <div class="article-nav">
+            
+                <div class="article-prev">
+                    <a class="prev btn"
+                       rel="prev"
+                       href="/2020/08/04/%E5%A4%9A%E9%87%8D%E8%83%8C%E5%8C%85/"
+                    >
+                        <i class="fa fa-chevron-left"></i> <span class="post-nav-title-item">动态规划 - 多重背包</span><span class="post-nav-item">Prev posts</span>
+                    </a>
+                </div>
+            
+            
+                <div class="article-next">
+                    <a class="next btn"
+                       rel="next"
+                       href="/2020/08/04/%E6%95%B0%E5%AD%97%E4%B8%89%E8%A7%92%E5%BD%A2/"
+                    >
+                        <span class="post-nav-title-item">数字三角形</span><span class="post-nav-item">Next posts</span> <i class="fa fa-chevron-right"></i>
+                    </a>
+                </div>
+            
+        </div>
+
+        <div class="comment-container">
+            <div class="comments-container">
+    
+</div>
+        </div>
+    </div>
+</div>
+
+    <div class="article-toc-container fade-in-down-animation">
+        <div class="article-toc">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        
+    </div>
+</div>
+        </div>
+    </div>
+
+
+                
+
+            </div>
+
+            
+
+        </main>
+
+        <div class="sidebar-tools">
+            <div class="tools-container">
+    <ul class="tools-list">
+        
+            <li class="search popup-trigger">
+                <i class="fa fa-search"></i>
+            </li>
+            
+<script src="/js/local-search.js"></script>
+
+        
+        <li class="mode-toggle">
+            <i class="fa fa-moon-o"></i>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+
+        
+            <div class="scroll-to-top">
+                <ul>
+                    <li>
+                        <!--<i class="fa fa-caret-up"></i>-->
+                        <span class="scroll-percent"></span>
+                    </li>
+                </ul>
+            </div>
+        
+    </div>
+
+    <div class="page-bottom">
+        <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy; 2020 <a href="/">ILS</a>
+        </div>
+        <div class="theme-info info-item">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a> | Theme <a
+                    href="https://github.com/XPoet/hexo-theme-ils" target="_blank">ILS v1.1.2</a>
+        </div>
+        
+    </div>
+</footer>
+
+    </div>
+</div>
+
+    <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-icon">
+            <i class="fa fa-search"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/js/main.js"></script>
+<script src="/js/header-shrink.js"></script>
+<script src="/js/toggle-mode.js"></script>
+
+
+
+    
+<script src="/js/scroll-to-top.js"></script>
+
+
+
+
+
+    
+        
+<script src="/js/code-copy.js"></script>
+
+    
+
+    
+        
+<script src="/lib/anime.min.js"></script>
+<script src="/js/toc.js"></script>
+
+    
+
+
+
+
+</body>
+</html>

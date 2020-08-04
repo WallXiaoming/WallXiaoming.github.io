@@ -1,6 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>动态规划 - 01背包</title>
+    <url>/2020/08/04/01%E8%83%8C%E5%8C%85/</url>
+    <content><![CDATA[<hr>
+<p>Acwing: 需要登录账号密码，在群里可见</p>
+<p>来源： <a href="https://www.acwing.com/problem/content/2/">https://www.acwing.com/problem/content/2/</a></p>
+<p>推荐视频讲解： <a href="https://www.acwing.com/video/322/">https://www.acwing.com/video/322/</a></p>
+<p>题目描述：</p>
+<p>有 N 件物品和一个容量是 V 的背包。每件物品只能使用一次。</p>
+<p>第 i 件物品的体积是 vi，价值是 wi。</p>
+<p>求解将哪些物品装入背包，可使这些物品的总体积不超过背包容量，且总价值最大。<br>输出最大价值。</p>
+<hr>
+<p>根据闫氏DP法：</p>
+<p><img src="https://blogmypic.oss-cn-beijing.aliyuncs.com/img/20200804210531.png"></p>
+<p>状态计算就是状态方程，所以： $f[i][j] = max(f[i - 1][j], f[i - 1][j - v[i]] + w[i])$   这里$j - v[i] &gt;= 0$</p>
+<p>所以伪代码如下：</p>
+<figure class="highlight py"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> i &lt;- <span class="number">0</span> to n:</span><br><span class="line">    <span class="keyword">for</span> j &lt;- <span class="number">0</span> to m:</span><br><span class="line">        f[i][j] = f[i - <span class="number">1</span>][j]</span><br><span class="line">        <span class="keyword">if</span> v[i] &lt;= j:</span><br><span class="line">            f[i][j] = max(f[i][j], f[i - <span class="number">1</span>][j - v[i]] + w[i])</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>具体Python代码实现如下：</p>
+<figure class="highlight py"><table><tr><td class="code"><pre><span class="line">N = <span class="number">1010</span></span><br><span class="line">dp = [[<span class="number">0</span>]*N <span class="keyword">for</span> _ <span class="keyword">in</span> range(N)]</span><br><span class="line">v = [<span class="number">0</span>]*N</span><br><span class="line">w = [<span class="number">0</span>]*N</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span>():</span></span><br><span class="line">    n, m = map(int, input().split())</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, n + <span class="number">1</span>):</span><br><span class="line">        v[i], w[i] = map(int, input().split())</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, n + <span class="number">1</span>):</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">1</span>, m + <span class="number">1</span>):</span><br><span class="line">            dp[i][j] = dp[i - <span class="number">1</span>][j]</span><br><span class="line">            <span class="keyword">if</span> j &gt;= v[i]:</span><br><span class="line">                dp[i][j] = max(dp[i][j], dp[i - <span class="number">1</span>][j - v[i]] + w[i])</span><br><span class="line"></span><br><span class="line">    print(dp[n][m])</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">main()</span><br></pre></td></tr></table></figure>
+
+<p>根据dp表格所推出来的数据如下， 行表示物品i， 列表示背包容量v</p>
+<table>
+<thead>
+<tr>
+<th>0</th>
+<th>1</th>
+<th>2</th>
+<th>3</th>
+<th>4</th>
+<th>5</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>2</td>
+<td>2</td>
+<td>2</td>
+<td>2</td>
+<td>2</td>
+</tr>
+<tr>
+<td>0</td>
+<td>2</td>
+<td>4</td>
+<td>6</td>
+<td>6</td>
+<td>6</td>
+</tr>
+<tr>
+<td>0</td>
+<td>2</td>
+<td>4</td>
+<td>6</td>
+<td>6</td>
+<td>8</td>
+</tr>
+<tr>
+<td>0</td>
+<td>2</td>
+<td>4</td>
+<td>6</td>
+<td>6</td>
+<td>8</td>
+</tr>
+</tbody></table>
+<p>由状态转移方程可以看出，f[i][j]都是来自于第i-1层的数据，这时就可以使用可以利用一层空间进行状态的记录，我们只需要从大到小的枚举， 那么$f[j - v[i]]$的状态就是$f[i - 1][j - v[i]]$的状态。</p>
+<p>伪代码如下：</p>
+<figure class="highlight py"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">for</span> i &lt;- <span class="number">1</span> to n:</span><br><span class="line">    <span class="keyword">for</span> j &lt;- v to v[i]:</span><br><span class="line">        f[j] = max(f[j], f[j - v[i] + w[i])</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>因为使用一维状态，那么f[j] = f[i - 1][j]保持着上次的数据，这时就只需要枚举到v[i]。但是在二维背包中，f[i][j]默认是0，每层的背包都需要跟新，所以背包容量j从0开始枚举到m。</p>
+<p>具体Python代码如下：</p>
+<figure class="highlight py"><table><tr><td class="code"><pre><span class="line">N = <span class="number">1010</span></span><br><span class="line">dp, v, w = [<span class="number">0</span>]*N, [<span class="number">0</span>]*N, [<span class="number">0</span>]*N</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span>():</span></span><br><span class="line">    n, m = map(int, input().split())</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, n + <span class="number">1</span>):</span><br><span class="line">        v[i], w[i] = map(int, input().split())</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, n + <span class="number">1</span>):</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> range(m, v[i] - <span class="number">1</span>, <span class="number">-1</span>):</span><br><span class="line">                dp[j] = max(dp[j], dp[j - v[i]] + w[i])</span><br><span class="line"></span><br><span class="line">    print(dp[m])</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">main()</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+        <tag>算法基础</tag>
+        <tag>动态规划</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>MVC 和 MTV的区别</title>
     <url>/2020/08/03/MVC%20%E5%92%8C%20MTV%E7%9A%84%E5%8C%BA%E5%88%AB/</url>
     <content><![CDATA[<h2 id="MVC"><a href="#MVC" class="headerlink" title="MVC"></a>MVC</h2><p>把数据存取逻辑、业务逻辑和表现逻辑组合在一起的概念被称为软件架构的 Model-View-Controller (MVC)模式。 在这个模式中， Model 代表数据存取层，View 代表的是系统中选择显示什么和怎么显示的部分，Controller 指的是系统中根据用户输入并视需要访问模型，以决定使用哪个视图的那部分</p>
@@ -36,6 +127,9 @@
 </ol>
 <p><img src="https://blogmypic.oss-cn-beijing.aliyuncs.com/img/20200803141513.png"></p>
 ]]></content>
+      <categories>
+        <category>Django</category>
+      </categories>
       <tags>
         <tag>django</tag>
       </tags>
@@ -61,6 +155,9 @@
 
 <p>输入这个命令后系统会提示你输入密码，此时输入你电脑账户的密码即可。然后开始写入。如果没有载入新的命令行，说明正在写入，这时候就需要耐心等待，有事需要几个小时，根据你文件大小和U盘传输速率来定。</p>
 ]]></content>
+      <categories>
+        <category>树莓派</category>
+      </categories>
       <tags>
         <tag>树莓派</tag>
       </tags>
@@ -101,9 +198,66 @@
 <p>PS:</p>
 <p>这里r - l &gt; 1e-8 是提升精度的方式, 要求保留6位小数点的话，那么精度就要求1e8。循环100次也是提升精度的方式。 这里<code>mid * mid * mid &gt;= x</code>， 等于符号无所谓，可有可无，因为取不到等于的情况。</p>
 ]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
       <tags>
         <tag>算法</tag>
         <tag>算法基础</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>位运算</title>
+    <url>/2020/08/04/%E4%BD%8D%E8%BF%90%E7%AE%97/</url>
+    <content><![CDATA[<hr>
+<p>常见的两种操作，一个是找第几位的值是几，一个是找最后一个1是多少lowbit。</p>
+<p>找第几位的值是几： 向右边移动k为然后进行与运算。 <code>x &gt;&gt; k &amp; 1</code></p>
+<p>lowbit操作： <code>x &amp; -x</code>, -x等于反码+1</p>
+<p><img src="https://blogmypic.oss-cn-beijing.aliyuncs.com/img/20200804143547.png"></p>
+<p>来源：</p>
+<p><a href="https://www.acwing.com/problem/content/description/803/">https://www.acwing.com/problem/content/description/803/</a></p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> N = <span class="number">1e5</span> + <span class="number">5</span>;</span><br><span class="line"><span class="keyword">int</span> a[N];</span><br><span class="line"><span class="keyword">int</span> n;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">lowbit</span><span class="params">(<span class="keyword">int</span> x)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> x &amp; -x;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">cin</span> &gt;&gt; n;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) <span class="built_in">cin</span> &gt;&gt; a[i];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">int</span> res = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (a[i]) a[i] -= lowbit(a[i]), res++;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;%d &quot;</span>, res);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>或者</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>, &amp;n);</span><br><span class="line">    <span class="keyword">while</span> (n -- )</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">int</span> x, s = <span class="number">0</span>;</span><br><span class="line">        <span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>, &amp;x);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = x; i; i -= i &amp; -i) s ++ ;</span><br><span class="line"></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;%d &quot;</span>, s);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+        <tag>算法基础</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>分组背包问题</title>
+    <url>/2020/08/04/%E5%88%86%E7%BB%84%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<hr>
+<p>Acwing: 需要登录账号密码，在群里可见</p>
+<p>来源： <a href="https://www.acwing.com/problem/content/9/">https://www.acwing.com/problem/content/9/</a></p>
+<p>推荐视频讲解： <a href="https://www.acwing.com/video/341/">https://www.acwing.com/video/341/</a></p>
+<p>有 N 组物品和一个容量是 V 的背包。</p>
+<p>每组物品有若干个，同一组内的物品最多只能选一个。<br>每件物品的体积是 $v_{ij}$，价值是 $w_{ij}$，其中 i 是组号，j 是组内编号。</p>
+<p>求解将哪些物品装入背包，可使物品总体积不超过背包容量，且总价值最大。</p>
+<p>输出最大价值。</p>
+<hr>
+<p>闫氏DP法：</p>
+<p><img src="https://blogmypic.oss-cn-beijing.aliyuncs.com/img/20200804210547.png"></p>
+<p>所以状态方程就是：</p>
+<p>$f[i][j] = max(f[i - 1][j], f[i - 1][j - v[i][n]] + w[i][n])$</p>
+<p>C++ 实现：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;algorithm&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> N = <span class="number">110</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> n, m;</span><br><span class="line"><span class="keyword">int</span> s[N], v[N][N], w[N][N];</span><br><span class="line"><span class="keyword">int</span> f[N];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">cin</span> &gt;&gt; n &gt;&gt; m;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++) &#123;</span><br><span class="line">        <span class="built_in">cin</span> &gt;&gt; s[i];</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; s[i]; j++) <span class="built_in">cin</span> &gt;&gt; v[i][j] &gt;&gt; w[i][j];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>( <span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> j = m; j &gt;= <span class="number">0</span>; j--)</span><br><span class="line">            <span class="keyword">for</span>( <span class="keyword">int</span> k = <span class="number">0</span>; k &lt; s[i]; k++)</span><br><span class="line">                <span class="keyword">if</span> (v[i][k] &lt;= j)</span><br><span class="line">                    f[j] = <span class="built_in">max</span>(f[j], f[j - v[i][k]] + w[i][k]);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; f[m] &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Python实现：</p>
+<figure class="highlight py"><table><tr><td class="code"><pre><span class="line">N = <span class="number">110</span></span><br><span class="line">f, s = [<span class="number">0</span>]*N, [<span class="number">0</span>]*N</span><br><span class="line">v = [[<span class="number">0</span>]*N <span class="keyword">for</span> _ <span class="keyword">in</span> range(N)]</span><br><span class="line">w = [[<span class="number">0</span>]*N <span class="keyword">for</span> _ <span class="keyword">in</span> range(N)]</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span>():</span></span><br><span class="line">    n, m = map(int, input().split())</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, n + <span class="number">1</span>):</span><br><span class="line">        s[i] = int(input())</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> range(s[i]):</span><br><span class="line">            v[i][j], w[i][j] = map(int, input().split())</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, n + <span class="number">1</span>):</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> range(m, <span class="number">-1</span>, <span class="number">-1</span>):</span><br><span class="line">            <span class="keyword">for</span> k <span class="keyword">in</span> range(s[i]):</span><br><span class="line">                <span class="keyword">if</span> v[i][k] &lt;= j:</span><br><span class="line">                    f[j] = max(f[j], f[j - v[i][k]] + w[i][k])</span><br><span class="line"></span><br><span class="line">    print(f[m])</span><br><span class="line"></span><br><span class="line">main()</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+        <tag>算法基础</tag>
+        <tag>动态规划</tag>
       </tags>
   </entry>
   <entry>
@@ -157,9 +311,344 @@
 <p>接下来就是求前缀和。</p>
 <figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> N = <span class="number">1010</span>;</span><br><span class="line"><span class="keyword">int</span> a[N][N], b[N][N];</span><br><span class="line"><span class="keyword">int</span> n, m, q;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">insert</span><span class="params">(<span class="keyword">int</span> x1, <span class="keyword">int</span> y1, <span class="keyword">int</span> x2, <span class="keyword">int</span> y2, <span class="keyword">int</span> c)</span> </span>&#123;</span><br><span class="line">    b[x1][y1] += c;</span><br><span class="line">    b[x1][y2 + <span class="number">1</span>] -= c;</span><br><span class="line">    b[x2 + <span class="number">1</span>][y1] -= c;</span><br><span class="line">    b[x2 + <span class="number">1</span>][y2 + <span class="number">1</span>] += c;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">cin</span> &gt;&gt; n &gt;&gt; m &gt;&gt; q;</span><br><span class="line">    <span class="comment">// 读取数组a</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">1</span>; j &lt;= m; j++)</span><br><span class="line">            <span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>, &amp;a[i][j]);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 构造数组b</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">1</span>; j &lt;= m; j++)</span><br><span class="line">            insert(i, j, i, j, a[i][j]);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (q--) &#123;</span><br><span class="line">        <span class="keyword">int</span> x1, y1, x2, y2, c;</span><br><span class="line">        <span class="built_in">cin</span> &gt;&gt; x1 &gt;&gt; y1 &gt;&gt; x2 &gt;&gt; y2 &gt;&gt; c;</span><br><span class="line">        insert(x1, y1, x2, y2, c);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">1</span>; j &lt;= m; j++)</span><br><span class="line">            b[i][j] += b[i - <span class="number">1</span>][j] + b[i][j - <span class="number">1</span>] - b[i - <span class="number">1</span>][j - <span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++) &#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">1</span>; j &lt;= m; j++)</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;%d &quot;</span>, b[i][j]);</span><br><span class="line">        <span class="built_in">puts</span>(<span class="string">&quot; &quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 ]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
       <tags>
         <tag>算法</tag>
         <tag>算法基础</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>动态规划基础</title>
+    <url>/2020/08/04/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%E5%9F%BA%E7%A1%80/</url>
+    <content><![CDATA[<hr>
+<p>动态规划是数据结构和算法中比较难的一部分，我学动态规划也是走走停停，从来没有完整学完过动态规划。所以我打算这一次完完整整的学完动态规划，并通过写题解的方式记录下来。</p>
+<p>接下来是正文。</p>
+<p>动态规划是什么？又是一个非常高大上的一个名词，百度百科解释如下：</p>
+<p>动态规划（Dynamic Programming，DP）是运筹学的一个分支，是求解决策过程最优化的过程。20世纪50年代初，美国数学家贝尔曼（R.Bellman）等人在研究多阶段决策过程的优化问题时，提出了著名的最优化原理，从而创立了动态规划。动态规划的应用极其广泛，包括工程技术、经济、工业生产、军事以及自动化控制等领域，并在背包问题、生产经营问题、资金管理问题、资源分配问题、最短路径问题和复杂系统可靠性问题等中取得了显著的效果。</p>
+<p>解释很专业，但是我是没太明白说的是个啥</p>
+<p>学动态规划讲的比较详细的是《算法导论》，建议参看。</p>
+<p>动态规划简单讲就是一个利用<code>空间换取时间</code>降低时间复杂度的一个技术。</p>
+<p>讲动态规划一定离不开斐波那契数列问题。斐波那契数列的关系式： $f(n) = f(n - 1) + fib(n - 2), f(n) = 1, n &lt; 2$</p>
+<p>这样的一个关系式在动态规划叫做<code>状态转移方程</code>，就是状态n有n-1和n-2转移过来的。首先写一个暴力解时间复杂度$O(2^n)$</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">fib</span>(<span class="params">n</span>):</span></span><br><span class="line">    <span class="keyword">if</span> n &lt; <span class="number">2</span>: <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> fib(n - <span class="number">1</span>) + fib(n - <span class="number">2</span>)</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">10</span>):</span><br><span class="line">    print(fib(i), end=<span class="string">&quot; &quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<pre><code>1 1 2 3 5 8 13 21 34 55</code></pre>
+<p>当n达到40左右的时候，程序就会非常慢了。有兴趣的可以试一下，因为这是指数级时间复杂度。</p>
+<p>画下递归树以fib(8)为例：</p>
+<p><img src="https://blogmypic.oss-cn-beijing.aliyuncs.com/img/20200804210611.png"></p>
+<p>在算fib(8)的时候，计算了1次fib(7), 2次fib(6), 3次fib(5)， 4次fib(4)。也就有一个现象，就是<code>重复计算</code>。</p>
+<p>如何避免重复计算就可以把时间复杂度降低了，很直接的一个想法就是把每次计算的值存到一个地方，下次如果需要用的时候，在直接取出来，就可以避免重复计算了。就是很直白的一个空间换时间的一个想法，也就是<code>动态规划(DP)</code>。</p>
+<p>这里我用哈希表来存放计算的数值，用数组或者其他的数据结构也行。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">fibMemo</span>(<span class="params">n, memo=&#123;&#125;</span>):</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="keyword">return</span> memo[n]</span><br><span class="line">    <span class="keyword">except</span> KeyError:</span><br><span class="line">        <span class="keyword">if</span> n &lt; <span class="number">2</span>: <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">        res = fibMemo(n - <span class="number">1</span>) + fibMemo(n - <span class="number">2</span>)</span><br><span class="line">        memo[n] = res</span><br><span class="line">        <span class="keyword">return</span> res</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">fibMemo(<span class="number">100</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>573147844013817084101</code></pre>
+<p>这样可以很快的算出斐波那契数。因为哈希表每次的寻址时间复杂度是$O(1)$， 所以，整个算法的时间复杂度就是$O(n)$。</p>
+<p>到这里，已经是动态规划了，它有个名字叫做<code>自上而下</code>版本，是递归的形式，但是往往需要改成非递归版本。因为非递归版本使用空间更小，递归版本容易发生爆栈。</p>
+<p>至于怎么改非递归版本，这里有个小套路，如果写了递归版本，那么可以根据递归版本套路改，或者，直接递归方程式写。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">fibUnrecur</span>(<span class="params">n</span>):</span></span><br><span class="line">    <span class="comment"># 这里属于判特，n 不能小于0</span></span><br><span class="line">    <span class="keyword">if</span> n &lt; <span class="number">0</span>: <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">    <span class="comment"># 这里用数组，dp也叫表格法</span></span><br><span class="line">    dp = [<span class="number">0</span>]*(n + <span class="number">1</span>)</span><br><span class="line">    <span class="comment"># n &lt; 2， fib(n) = 1</span></span><br><span class="line">    dp[<span class="number">0</span>] = dp[<span class="number">1</span>] = <span class="number">1</span></span><br><span class="line">    <span class="comment"># 然后n &gt;= 2，从2开始递推</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">2</span>, n + <span class="number">1</span>):</span><br><span class="line">        dp[i] = dp[i - <span class="number">1</span>] + dp[i - <span class="number">2</span>]</span><br><span class="line">    <span class="keyword">return</span> dp[n]</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">fibUnrecur(<span class="number">100</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>573147844013817084101</code></pre>
+<p>这里的dp[0], dp[1]属于递归的base case， 然后从2 ~ n进行递推，只是把递归的写法fib(n) = fib(n - 1) + fib(n - 2)变换成了，dp[i] = dp[i - 1] + dp[i - 2]。这个可以很直观的看出来时间复杂度是$O(n)$， 空间复杂度是$O(n)$。</p>
+<p>到这里，其实基本上已经结束了，但是这道题还有个小小的空间优化，由<code>状态转移方程</code>可以看出，n的状态只和n - 1和n - 2有关系，这里就可以进行空间的优化。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">fibFinal</span>(<span class="params">n</span>):</span></span><br><span class="line">    a, b = <span class="number">1</span>, <span class="number">1</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">2</span>, n + <span class="number">1</span>):</span><br><span class="line">        a, b  = b, a + b</span><br><span class="line">    <span class="keyword">return</span> b</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">fibFinal(<span class="number">100</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>573147844013817084101</code></pre>
+<p>这里的时间复杂度是$O(n)$的， 空间复杂度是$O(1)$。到这里就是动态规划的全部过程。</p>
+<p>细心的你可能已经发现了，动态规划最难的部分不在于敲代码，在于写<code>状态方程式</code>。如果你能写出状态方程式，那么改动态规划还是比较套路化的。当然有些个别题例外，大部分都是考状态转移方程，至于怎么写出状态转移方程，套路就是，多刷题，多练，当然也有大佬总结出一些常见的动态规划的模板比如比较出名的是dd大牛的《背包九讲》，群里有上传文件。</p>
+<p>总结一下：</p>
+<ul>
+<li>写出状态转移方程， 或者递归表达式。(两个东西是一样的，写出一个一定能写出另一个)</li>
+<li>改动态规划，如果能够优化空间复杂度就优化空间复杂度。</li>
+</ul>
+<hr>
+<p>推荐几道练手题：</p>
+<p>类似于斐波那契数列 - <a href="https://leetcode-cn.com/problems/three-steps-problem-lcci/">三步问题</a><br>推dp表格 - <a href="https://leetcode-cn.com/problems/li-wu-de-zui-da-jie-zhi-lcof/">礼物的最大价值</a><br>01背包问题 - <a href="https://leetcode-cn.com/problems/house-robber/">打家劫舍</a><br>完全背包问题- <a href="https://leetcode-cn.com/problems/coin-change/">零钱兑换</a></p>
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+        <tag>算法基础</tag>
+        <tag>动态规划</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>双指针算法</title>
+    <url>/2020/08/04/%E5%8F%8C%E6%8C%87%E9%92%88%E7%AE%97%E6%B3%95/</url>
+    <content><![CDATA[<hr>
+<p>双指针算法是从暴力中优化，根据题目要求的某种性质进行优化。快排， 归排都用了双指针算法。把具有某种性质给提出来。简化时间复杂度的方法。</p>
+<p>比如这样一道题目：</p>
+<p>给定一些字符串，中间以空格隔开，输出每个字符串。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>, j = <span class="number">0</span>; i &lt; n; i++)</span><br><span class="line">&#123;</span><br><span class="line">    j = i;</span><br><span class="line">    <span class="keyword">while</span>(j &lt; n &amp;&amp; s[j] != <span class="string">&#x27; &#x27;</span>) j++;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> k = i; k &lt;= j; k++) <span class="built_in">printf</span>(<span class="string">&quot;%s&quot;</span>, s[k]);</span><br><span class="line">    i = j;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>一些C++的字符串读取操作：<br>fgets(char数组, 最大读取长度, stdin)<br>scanf()会读取到字符串为空，或者回车的情况。</p>
+<p>所以双指针，统一可以写成这样模板：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>, j = <span class="number">0</span>; i &lt; n; i++)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">while</span>(cheak(j, i)) j++;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 具体题目逻辑</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>最长连续不重复子序列， 来源：</p>
+<p><a href="https://www.acwing.com/problem/content/801/">https://www.acwing.com/problem/content/801/</a></p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> N = <span class="number">1e5</span> + <span class="number">10</span>;</span><br><span class="line"><span class="keyword">int</span> q[N], s[N];</span><br><span class="line"><span class="keyword">int</span> n;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">cin</span> &gt;&gt; n;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) <span class="built_in">cin</span> &gt;&gt; q[i];</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> res = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i= <span class="number">0</span>, j = <span class="number">0</span>; i &lt; n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        s[q[i]]++;</span><br><span class="line">        <span class="keyword">while</span>(s[q[i]] &gt; <span class="number">1</span>) s[q[j++]]--;</span><br><span class="line"></span><br><span class="line">        res = <span class="built_in">max</span>(res, i - j + <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; res &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>数组元素的目标和:</p>
+<p><a href="https://www.acwing.com/problem/content/802/">https://www.acwing.com/problem/content/802/</a></p>
+<p><img src="https://blogmypic.oss-cn-beijing.aliyuncs.com/img/20200804205942.png"></p>
+<p>因为数组具有单调性，可以由一下组成：</p>
+<ul>
+<li>a[i] + b[j] &gt; x j–</li>
+<li>否则i++</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> N = <span class="number">100010</span>;</span><br><span class="line"><span class="keyword">int</span> n, m, x;</span><br><span class="line"><span class="keyword">int</span> a[N], b[N];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">cin</span> &gt;&gt; n &gt;&gt; m &gt;&gt; x;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) <span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>, &amp;a[i]);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; m; i++) <span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>, &amp;b[i]);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>, j = m - <span class="number">1</span>; i &lt; n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">while</span>(j &gt;= <span class="number">0</span> &amp;&amp; a[i] + b[j] &gt; x) j--;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(a[i] + b[j] == x)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">cout</span> &lt;&lt; i &lt;&lt; <span class="string">&quot; &quot;</span> &lt;&lt; j &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+        <tag>算法基础</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>动态规划 - 多重背包</title>
+    <url>/2020/08/04/%E5%A4%9A%E9%87%8D%E8%83%8C%E5%8C%85/</url>
+    <content><![CDATA[<hr>
+<p>Acwing: 需要登录账号密码，在群里可见</p>
+<p>来源： <a href="https://www.acwing.com/problem/content/4/">https://www.acwing.com/problem/content/4/</a></p>
+<p>推荐视频讲解： <a href="https://www.acwing.com/video/325/">https://www.acwing.com/video/325/</a></p>
+<p>题目描述：</p>
+<p>有 N 种物品和一个容量是 V 的背包。</p>
+<p>第 i 种物品最多有 si 件，每件体积是 vi，价值是 wi。</p>
+<p>求解将哪些物品装入背包，可使物品体积总和不超过背包容量，且价值总和最大。<br>输出最大价值。</p>
+<p>PS: 完全背包和01背包的区别就是01背包只能选一件，完全背包可以选无数件</p>
+<hr>
+<p>闫氏DP法：</p>
+<p><img src="https://blogmypic.oss-cn-beijing.aliyuncs.com/img/20200804210741.png"></p>
+<p>PS: 多重背包问题和完全背包类似，这里是指从k件物品变成到了s[i]件物品。</p>
+<p>所以伪代码同完全背包的最初版本：</p>
+<figure class="highlight py"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> i &lt;- <span class="number">1</span> to n:</span><br><span class="line">    <span class="keyword">for</span> j &lt;- <span class="number">1</span> to m:</span><br><span class="line">        <span class="keyword">for</span> k &lt;- <span class="number">0</span> to s[i] <span class="keyword">and</span> k * v[i] &lt;= j:</span><br><span class="line">            f[i][j] = max(f[i - <span class="number">1</span>][j], f[i - <span class="number">1</span>][j - k * v[i]] + k * w[i])</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>Python 实现如下：</p>
+<figure class="highlight py"><table><tr><td class="code"><pre><span class="line">N = <span class="number">1010</span></span><br><span class="line">dp, v, w, s = [[<span class="number">0</span>]*N <span class="keyword">for</span> _ <span class="keyword">in</span> range(N)], [<span class="number">0</span>]*N, [<span class="number">0</span>]*N, [<span class="number">0</span>]*N</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span>():</span></span><br><span class="line">    n, m = map(int, input().split())</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, n + <span class="number">1</span>):</span><br><span class="line">        v[i], w[i], s[i] = map(int, input().split())</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, n + <span class="number">1</span>):</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">1</span>, m + <span class="number">1</span>):</span><br><span class="line">            k = <span class="number">0</span></span><br><span class="line">            <span class="keyword">while</span> k &lt;= s[i] <span class="keyword">and</span> k * v[i] &lt;= j:</span><br><span class="line">                dp[i][j] = max(dp[i][j], dp[i - <span class="number">1</span>][j - k * v[i]] + k * w[i])</span><br><span class="line">                k += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    print(dp[n][m])</span><br><span class="line"></span><br><span class="line">main()</span><br></pre></td></tr></table></figure>
+
+<p>这代题的数据范围是 N &lt;= 100, 所以用这样的暴力解法能过。</p>
+<p>在下一道题 N &lt;= 1000，这样的数据范围下，代码会超时。</p>
+<p>所以会有一个二进制值优化：</p>
+<p>比如一个数可以由2的倍数组成：</p>
+<p>$2^0 = 1, 2^1 = 2, 2^2 = 4, 2^3 = 8….$</p>
+<p>比如数字7  = 1 + 2 + 3 = $2^0 + 2^1 + 2^2$</p>
+<p>所以可以把s[i]最多分成$log s[i] + 1$份数， 然后再做01背包</p>
+<p>比如s[i] = 7, 那么就可以分成$2^0 + 2^1 + 2^2$，然后在做01背包，那么选择的时候就可以选择:<br>1， 2， 4 那么最大就是7可以被选<br>1, 2 那么3就可以被选<br>1, 4 那么5就可以被选<br>2, 4 那么6就可以被选<br>1 那么1 就可以被选<br>2 那么2 就可以被选<br>3 那么3 就可以被选</p>
+<p>这样就不用再一个一个从i = 0 枚举到s[i],此外还有个细节需要注意就是二进制$2^n &lt;= s[i]$,当$2^n &lt; s[i]$的时候需要把$s[i] - 2^n$剩余的也放入背包中</p>
+<p>Python实现如下：</p>
+<figure class="highlight py"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment"># 应为数据范围是N &lt;= 1000, M &lt;= 2000 所以做01背包的时候就是 N * M * log(M) ~= 20000多, 数据N = 25000 就不会超掉</span></span><br><span class="line">N = <span class="number">25000</span></span><br><span class="line">dp = [<span class="number">0</span>]*N</span><br><span class="line">v = [<span class="number">0</span>]*N</span><br><span class="line">w = [<span class="number">0</span>]*N</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span>():</span></span><br><span class="line">    n, m = map(int, input().split())</span><br><span class="line">    cnt = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, n + <span class="number">1</span>):</span><br><span class="line">        a, b, c = map(int, input().split())</span><br><span class="line">        temp = <span class="number">1</span></span><br><span class="line">        <span class="keyword">while</span> temp &lt;= c:</span><br><span class="line">            cnt += <span class="number">1</span></span><br><span class="line">            v[cnt] = temp * a</span><br><span class="line">            w[cnt] = temp * b</span><br><span class="line">            c -= temp</span><br><span class="line">            temp *= <span class="number">2</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> c &gt; <span class="number">0</span>:</span><br><span class="line">            cnt += <span class="number">1</span></span><br><span class="line">            v[cnt] = c * a</span><br><span class="line">            w[cnt] = c * b</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, cnt + <span class="number">1</span>):</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> range(m, v[i] - <span class="number">1</span>, <span class="number">-1</span>):</span><br><span class="line">            dp[j] = max(dp[j], dp[j - v[i]] + w[i])</span><br><span class="line"></span><br><span class="line">    print(dp[m])</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">main()</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+        <tag>算法基础</tag>
+        <tag>动态规划</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>动态规划 - 完全背包</title>
+    <url>/2020/08/04/%E5%AE%8C%E5%85%A8%E8%83%8C%E5%8C%85/</url>
+    <content><![CDATA[<hr>
+<p>Acwing: 需要登录账号密码，在群里可见</p>
+<p>来源： <a href="https://www.acwing.com/problem/content/3/">https://www.acwing.com/problem/content/3/</a></p>
+<p>推荐视频讲解： <a href="https://www.acwing.com/video/324/">https://www.acwing.com/video/324/</a></p>
+<p>题目描述：</p>
+<p>有 N 种物品和一个容量是 V 的背包，每种物品都有无限件可用。</p>
+<p>第 i 种物品的体积是 vi，价值是 wi。</p>
+<p>求解将哪些物品装入背包，可使这些物品的总体积不超过背包容量，且总价值最大。<br>输出最大价值。</p>
+<p>PS: 完全背包和01背包的区别就是01背包只能选一件，完全背包可以选无数件</p>
+<hr>
+<p>闫氏DP法：</p>
+<p><img src="https://blogmypic.oss-cn-beijing.aliyuncs.com/img/20200804210759.png"></p>
+<p>状态计算就是状态方程，所以： $f[i][j] = max(f[i - 1][j], f[i - 1][j - v[i]] + w[i], f[i - 1][j - 2<em>v[i] + 2</em>w[i],…<br>, f[i - 1][j - k*v[i] + k * w[i])$   这里$j - K * v[i] &gt;= 0$</p>
+<p>伪代码如下：</p>
+<figure class="highlight py"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> i &lt;- <span class="number">1</span> to n:</span><br><span class="line">    <span class="keyword">for</span> j &lt;- <span class="number">1</span> to m:</span><br><span class="line">        <span class="keyword">for</span> k &lt;- <span class="number">0</span> to j - k*v[i] &gt; <span class="number">0</span>:</span><br><span class="line">            f[i][j] = max(f[i - <span class="number">1</span>][j], f[i - <span class="number">1</span>][j - k * v[i]] + k * w[i])</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>Python 实现如下(超时)：</p>
+<figure class="highlight py"><table><tr><td class="code"><pre><span class="line">N = <span class="number">1010</span></span><br><span class="line">dp, v, w = [[<span class="number">0</span>]*N <span class="keyword">for</span> _ <span class="keyword">in</span> range(N)], [<span class="number">0</span>]*N, [<span class="number">0</span>]*N</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span>():</span></span><br><span class="line">    n, m = map(int, input().split())</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, n + <span class="number">1</span>):</span><br><span class="line">        v[i], w[i] = map(int, input().split())</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, n + <span class="number">1</span>):</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">1</span>, m + <span class="number">1</span>):</span><br><span class="line">            k = <span class="number">0</span></span><br><span class="line">            <span class="keyword">while</span> k * v[i] &lt;= j:</span><br><span class="line">                dp[i][j] = max(dp[i][j], dp[i - <span class="number">1</span>][j - k * v[i]] + k * w[i])</span><br><span class="line">                k += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    print(dp[n][m])</span><br><span class="line"></span><br><span class="line">main()</span><br></pre></td></tr></table></figure>
+
+<p>在此进行优化一下：<br>$f[i][j] = max(f[i][j], f[i- 1][j – v] + w, f[i - 1][j - 2v] + 2w, … f[i - 1][j - kv] + kw)$<br>$f[i][j - v] = max(f[i][j - v], f[i- 1][j – 2v] + w, f[i - 1][j - 3v] + 2w, … f[i - 1][j - kv] + (k - 1)w)$</p>
+<p><img src="https://blogmypic.oss-cn-beijing.aliyuncs.com/img/20200804210812.png"></p>
+<p>这里的运算是取最大值, 所以红框里面部分只相差一个w[i] 所以状态方程就可以写成为:<br>$f[i][j] = max(f[i - 1][j], f[i][j - v[i]] + w[i])$</p>
+<p>01背包状态方程式：<br>$f[i][j] = max(f[i - 1][j], f[i - 1][j - v[i]] + w[i])$</p>
+<p>不同点在于01背包是i - 1， 而完全背包是i</p>
+<p>所以伪代码如下(类似于01背包)：</p>
+<figure class="highlight py"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> i &lt;- <span class="number">1</span> to n:</span><br><span class="line">    <span class="keyword">for</span> j &lt;- <span class="number">1</span> to m:</span><br><span class="line">        f[i][j] = f[i - <span class="number">1</span>][j]</span><br><span class="line">        <span class="keyword">if</span> v[i] &lt;= j:</span><br><span class="line">            <span class="comment"># 只是这里变成了i</span></span><br><span class="line">            f[i][j] = max(f[i][j], f[i][j - v[i]] + w[i]</span><br></pre></td></tr></table></figure>
+
+<p>Python实现：</p>
+<figure class="highlight py"><table><tr><td class="code"><pre><span class="line">N = <span class="number">1010</span></span><br><span class="line">dp = [[<span class="number">0</span>]*N <span class="keyword">for</span> _ <span class="keyword">in</span> range(N)]</span><br><span class="line">w = [<span class="number">0</span>]*N</span><br><span class="line">v = [<span class="number">0</span>]*N</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span>():</span></span><br><span class="line">    n, m = map(int, input().split())</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, n + <span class="number">1</span>):</span><br><span class="line">        v[i], w[i] = map(int, input().split())</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, n + <span class="number">1</span>):</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">1</span>, m + <span class="number">1</span>):</span><br><span class="line">            dp[i][j] = dp[i - <span class="number">1</span>][j]</span><br><span class="line">            <span class="keyword">if</span> v[i] &lt;= j:</span><br><span class="line">                dp[i][j] = max(dp[i][j], dp[i][j - v[i]] + w[i])</span><br><span class="line"></span><br><span class="line">    print(dp[n][m])</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">main()</span><br></pre></td></tr></table></figure>
+
+<p>同样也可以优化为一维，由于是f[i][j]需要的是f[i][j - v[i]]的状态，所以，只需要在使用前计算更新计算过第i层就行了。只要从小到大开始枚举，那么所在层数的j - v[i]是更新过了的，也就是第i层</p>
+<p>伪代码如下：</p>
+<figure class="highlight py"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> i &lt;- <span class="number">1</span> to n:</span><br><span class="line">    <span class="keyword">for</span> j &lt;- v[i] to m:</span><br><span class="line">        f[j] = max(f[j], f[j - v[i]] + w[i]</span><br></pre></td></tr></table></figure>
+<p>代码和01背包的写法非常类似，只是循环一个是从前，一个是从后。</p>
+<p>Python实现</p>
+<figure class="highlight py"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">N = <span class="number">1010</span></span><br><span class="line">dp, w, v = [<span class="number">0</span>]*N, [<span class="number">0</span>]*N, [<span class="number">0</span>]*N</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span>():</span></span><br><span class="line">    n, m = map(int, input().split())</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, n + <span class="number">1</span>):</span><br><span class="line">        v[i], w[i] = map(int, input().split())</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, n + <span class="number">1</span>):</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> range(v[i], m + <span class="number">1</span>):  <span class="comment"># 只是这里和01代码有所不同</span></span><br><span class="line">           dp[j] = max(dp[j], dp[j - v[i]] + w[i])</span><br><span class="line"></span><br><span class="line">    print(dp[m])</span><br><span class="line"></span><br><span class="line">main()</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+        <tag>算法基础</tag>
+        <tag>动态规划</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>快速排序</title>
+    <url>/2020/08/04/%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F/</url>
+    <content><![CDATA[<hr>
+<p>题目来源： <a href="https://www.acwing.com/problem/content/787/">https://www.acwing.com/problem/content/787/</a></p>
+<p>描述：</p>
+<p>给定你一个长度为n的整数数列。</p>
+<p>请你使用快速排序对这个数列按照从小到大进行排序。</p>
+<p>并将排好序的数列按顺序输出。</p>
+<hr>
+<p>快速排序是一种分而治之的一种排序方法，时间复杂度： 期望$O(nlogn)$</p>
+<ul>
+<li>首先确定一个划分值x: 可以是最左边，最右边，中间，随机值都是可行的</li>
+<li>调整范围，也叫partition过程，把小于等于x的放在左边，大于等于x的放在右边</li>
+<li>递归解决左右两端</li>
+</ul>
+<p><img src="https://blogmypic.oss-cn-beijing.aliyuncs.com/img/20200804205849.png"></p>
+<p>第一种划分方法，利用双指针：</p>
+<ul>
+<li>i, j 分别表示最左边和最右边</li>
+<li>如果q[i] &lt; x, i++</li>
+<li>如果q[i] &gt;= x, 判断q[j] &gt; x:<blockquote>
+<ul>
+<li>如果q[j] &gt; x, j–</li>
+<li>如果q[j] &lt;= x, 交换 q[i], q[j]的值，然后i++, j–</li>
+</ul>
+</blockquote>
+</li>
+</ul>
+<p>第一种</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> N = <span class="number">1e5</span> + <span class="number">5</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> q[N];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">quickSort</span><span class="params">(<span class="keyword">int</span> q[], <span class="keyword">int</span> l, <span class="keyword">int</span> r)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (l &gt;= r) <span class="keyword">return</span>;</span><br><span class="line">    <span class="keyword">int</span> i = l - <span class="number">1</span>, j = r + <span class="number">1</span>, x = q[(l + r) &gt;&gt; <span class="number">1</span>];</span><br><span class="line">    <span class="keyword">while</span> (i &lt; j) &#123;</span><br><span class="line">        <span class="keyword">do</span> i++; <span class="keyword">while</span> (q[i] &lt; x);</span><br><span class="line">        <span class="keyword">do</span> j--; <span class="keyword">while</span> (q[j] &gt; x);</span><br><span class="line">        <span class="keyword">if</span>(i &lt; j) swap(q[i], q[j]);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    quickSort(q, l, j);</span><br><span class="line">    quickSort(q, j + <span class="number">1</span>, r);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n;</span><br><span class="line">    <span class="built_in">cin</span> &gt;&gt; n;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) <span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>, &amp;q[i]);</span><br><span class="line"></span><br><span class="line">    quickSort(q, <span class="number">0</span>, n- <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) <span class="built_in">printf</span>(<span class="string">&quot;%d &quot;</span>, q[i]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>第二种划分，小于x在左边，大于x在右边，等于x在中间：</p>
+<ul>
+<li>less = left - 1, more = right + 1, 指针p = left</li>
+<li>如果q[p] &lt; x: 那么less向右边扩展，然后交换值, p指针下移动</li>
+<li>如果q[p] == x: p指针下移</li>
+<li>如果q[p] &gt; x: more 向左扩展，然后与指针p交换值。  #ps： 这里p指针不移动</li>
+</ul>
+<p>第二种</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> N = <span class="number">1e5</span> + <span class="number">5</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> q[N];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">quickSort</span><span class="params">(<span class="keyword">int</span> q[], <span class="keyword">int</span> l, <span class="keyword">int</span> r)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (l &gt;= r) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> p = l, less = l - <span class="number">1</span>, more = r + <span class="number">1</span>, x = q[(l + r) &gt;&gt; <span class="number">1</span>];</span><br><span class="line">    <span class="keyword">while</span> (p &lt; more) &#123;</span><br><span class="line">        <span class="keyword">if</span> (q[p] &lt; x) swap(q[++less], q[p++]);</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (q[p] == x) p++;</span><br><span class="line">        <span class="keyword">else</span> swap(q[--more], q[p]);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    quickSort(q, l, less);</span><br><span class="line">    quickSort(q, more, r);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n;</span><br><span class="line">    <span class="built_in">cin</span> &gt;&gt; n;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) <span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>, &amp;q[i]);</span><br><span class="line"></span><br><span class="line">    quickSort(q, <span class="number">0</span>, n - <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) <span class="built_in">printf</span>(<span class="string">&quot;%d &quot;</span>, q[i]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>快排的边界条件：</p>
+<ul>
+<li> 边界条件比较难处理，比如说第一个模板代码以q[l], q[r]作为边界的时候会进入死循环, 最好的方式就是记住模板。</li>
+<li>以中间点为划分点和随机划分都不会出现这种情况。</li>
+</ul>
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+        <tag>算法基础</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>归并排序</title>
+    <url>/2020/08/04/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F/</url>
+    <content><![CDATA[<hr>
+<p>题目来源： <a href="https://www.acwing.com/problem/content/789/">https://www.acwing.com/problem/content/789/</a></p>
+<p>描述：</p>
+<p>给定你一个长度为n的整数数列。</p>
+<p>请你使用归并排序对这个数列按照从小到大进行排序。</p>
+<p>并将排好序的数列按顺序输出。</p>
+<hr>
+<p>归并排序的思路：</p>
+<ul>
+<li>首先确定分界点，归并排序是以中间点划分，mid = left + right &gt;&gt; 1</li>
+<li>然后递归去划分只有一个的情况</li>
+<li>然后归并解决，利用双指针：<blockquote>
+<ul>
+<li>i指针指向左半部分最左边，j指针指向右半部分最左边，i = left, r = mid + 1。</li>
+<li>当i &lt;= mid 并且 j &lt;= right时， 如果q[i] &lt;= q[j] 那么q[i]复制到辅助数组，i++, 否者复制q[j]到辅助数组， j++.</li>
+<li>必然有一个越界，把越界剩余的部分复制到辅助数组就行</li>
+<li>然后把排序好的数组再复制回原数组</li>
+</ul>
+</blockquote>
+</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> N = <span class="number">1e5</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> q[N], tmp[N];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">merge_sort</span><span class="params">(<span class="keyword">int</span> q[], <span class="keyword">int</span> l, <span class="keyword">int</span> r)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (l &gt;= r) <span class="keyword">return</span>;</span><br><span class="line">    <span class="keyword">int</span> mid = l + r &gt;&gt; <span class="number">1</span>;</span><br><span class="line">    merge_sort(q, l, mid);</span><br><span class="line">    merge_sort(q, mid + <span class="number">1</span>, r);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> k = <span class="number">0</span>, i = l, j = mid + <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span> (i &lt;= mid &amp;&amp; j &lt;= r) &#123;</span><br><span class="line">        <span class="keyword">if</span> (q[i] &lt;= q[j]) tmp[k++] = q[i++];</span><br><span class="line">        <span class="keyword">else</span> tmp[k++] = q[j++];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">while</span> (i &lt;= mid) tmp[k++] = q[i++];</span><br><span class="line">    <span class="keyword">while</span> (j &lt;= r) tmp[k++] = q[j++];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(i = l, j = <span class="number">0</span>; i &lt;= r; i++, j++) q[i] = tmp[j];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n;</span><br><span class="line">    <span class="built_in">cin</span> &gt;&gt; n;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) <span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>, &amp;q[i]);</span><br><span class="line"></span><br><span class="line">    merge_sort(q, <span class="number">0</span>, n - <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) <span class="built_in">printf</span>(<span class="string">&quot;%d &quot;</span>, q[i]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+        <tag>算法基础</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>数字三角形</title>
+    <url>/2020/08/04/%E6%95%B0%E5%AD%97%E4%B8%89%E8%A7%92%E5%BD%A2/</url>
+    <content><![CDATA[<hr>
+<p>题目来源： <a href="https://www.acwing.com/problem/content/900/">https://www.acwing.com/problem/content/900/</a></p>
+<p>题目描述：</p>
+<p>给定一个如下图所示的数字三角形，从顶部出发，在每一结点可以选择移动至其左下方的结点或移动至其右下方的结点，一直走到底层，要求找出一条路径，使路径上的数字的和最大</p>
+<p>这道题非常注重边界条件，比如矩阵的初始化，利用维度的选择比较有技巧，还有把不规则的三角形放在一个矩阵中这个技巧比较重要。</p>
+<p>所以在三角形中，左边是行i，右边是列j，所以构造成一个三角矩阵，然后再通过求集合的方式，求出状态转移方程。</p>
+<p>这里的属性取max，然后又正数有负数，有0，所以初始化的时候都初始化为-INF，这里非常重要。</p>
+<p>所以状态转移方程就是：</p>
+<p>$f[i][j] = max(f[i - 1][j - 1], f[i - 1][j]) + a[i][j]$</p>
+<p>伪代码:</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">for</span> i &lt;- <span class="number">1</span> to n</span><br><span class="line">    <span class="keyword">for</span> j &lt;- <span class="number">1</span> to i</span><br><span class="line">        f[i][j] = max(f[i - <span class="number">1</span>][j - <span class="number">1</span>], f[i - <span class="number">1</span>][j]) + a[i][j]</span><br><span class="line"></span><br><span class="line">res = -inf</span><br><span class="line"><span class="keyword">for</span> i &lt;- <span class="number">1</span> to n</span><br><span class="line">    res = max(res, f[n][i]</span><br></pre></td></tr></table></figure>
+
+<p>C++实现：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;algorithm&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> N = <span class="number">550</span>, INF = <span class="number">1e9</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> a[N][N], f[N][N] = &#123;-INF&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n;</span><br><span class="line">    <span class="built_in">cin</span> &gt;&gt; n;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>( <span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">        <span class="keyword">for</span>( <span class="keyword">int</span> j = <span class="number">1</span>; j &lt;= i; j++)</span><br><span class="line">            <span class="built_in">cin</span> &gt;&gt; a[i][j];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;= n; i++)</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">0</span>; j &lt;= i + <span class="number">1</span>; j++)</span><br><span class="line">            f[i][j] = -INF;</span><br><span class="line"></span><br><span class="line">    f[<span class="number">1</span>][<span class="number">1</span>] = a[<span class="number">1</span>][<span class="number">1</span>];</span><br><span class="line">    <span class="keyword">for</span> ( <span class="keyword">int</span> i = <span class="number">2</span>; i &lt;= n; i++)</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">1</span>; j &lt;= i; j++)</span><br><span class="line">            f[i][j] = <span class="built_in">max</span>(f[i - <span class="number">1</span>][j - <span class="number">1</span>], f[i - <span class="number">1</span>][j]) + a[i][j];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> res = -INF;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">        res = <span class="built_in">max</span>(res, f[n][i]);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; res &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>也可以使用逆推的方式，这种方式不用考虑边界条件， 所以状态方程就变成：</p>
+<p>$f[i][j] = max(f[i + 1][j], f[i + 1][j + 1]) + a[i][j]$</p>
+<p>伪代码：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> i &lt;- n - <span class="number">1</span> to <span class="number">1</span></span><br><span class="line">    <span class="keyword">for</span> j &lt;- <span class="number">1</span> to i</span><br><span class="line">        f[i][j] = max(f[i + <span class="number">1</span>][j], f[i + <span class="number">1</span>][j + <span class="number">1</span>]) + a[i][j]</span><br><span class="line"></span><br><span class="line">res = f[<span class="number">1</span>][<span class="number">1</span>]</span><br></pre></td></tr></table></figure>
+
+<p>C++逆推实现：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;algorithm&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> N = <span class="number">550</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> a[N][N], f[N][N];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n;</span><br><span class="line">    <span class="built_in">cin</span> &gt;&gt; n;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>( <span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">        <span class="keyword">for</span>( <span class="keyword">int</span> j = <span class="number">1</span>; j &lt;= i; j++)</span><br><span class="line">            <span class="built_in">cin</span> &gt;&gt; a[i][j];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">        f[n][i] = a[n][i];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = n - <span class="number">1</span>; i &gt;= <span class="number">1</span>; i--)</span><br><span class="line">        <span class="keyword">for</span>( <span class="keyword">int</span> j = <span class="number">1</span>; j &lt;= i; j++)</span><br><span class="line">            f[i][j] = <span class="built_in">max</span>(f[i + <span class="number">1</span>][j], f[i + <span class="number">1</span>][j + <span class="number">1</span>]) + a[i][j];</span><br><span class="line"></span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; f[<span class="number">1</span>][<span class="number">1</span>] &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>应为f[i][j] 都是由f[i + 1]转移过来的，所以也可以使用一维表示, 使用滚动数组。二维改成一维并不会有特别大的提升。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;algorithm&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> N = <span class="number">550</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> a[N][N], f[N];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n;</span><br><span class="line">    <span class="built_in">cin</span> &gt;&gt; n;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>( <span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">        <span class="keyword">for</span>( <span class="keyword">int</span> j = <span class="number">1</span>; j &lt;= i; j++)</span><br><span class="line">            <span class="built_in">cin</span> &gt;&gt; a[i][j];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">        f[i] = a[n][i];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = n - <span class="number">1</span>; i &gt;= <span class="number">1</span>; i--)</span><br><span class="line">        <span class="keyword">for</span>( <span class="keyword">int</span> j = <span class="number">1</span>; j &lt;= i; j++)</span><br><span class="line">            f[j] = <span class="built_in">max</span>(f[j], f[j + <span class="number">1</span>]) + a[i][j];</span><br><span class="line"></span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; f[<span class="number">1</span>] &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+        <tag>算法基础</tag>
+        <tag>动态规划</tag>
       </tags>
   </entry>
   <entry>
@@ -216,8 +705,230 @@
 </li>
 </ol>
 ]]></content>
+      <categories>
+        <category>Django</category>
+      </categories>
       <tags>
         <tag>django</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>整数划分</title>
+    <url>/2020/08/04/%E6%95%B4%E6%95%B0%E5%88%92%E5%88%86/</url>
+    <content><![CDATA[<hr>
+<p>来源： <a href="https://www.acwing.com/problem/content/902/">https://www.acwing.com/problem/content/902/</a></p>
+<p>描述：</p>
+<p>一个正整数n可以表示成若干个正整数之和，形如：$n=n1+n2+…+nk$，其中$n1≥n2≥…≥nk,k≥1$。</p>
+<p>我们将这样的一种表示称为正整数n的一种划分。</p>
+<p>现在给定一个正整数n，请你求出n共有多少种不同的划分方法。</p>
+<p><code>由于答案可能很大，输出结果请对109+7取模。</code></p>
+<hr>
+<h3 id="方法一、-完全背包"><a href="#方法一、-完全背包" class="headerlink" title="方法一、 完全背包"></a>方法一、 完全背包</h3><p>可以类似于完全背包问题进行处理，可以变成物品i = 0 ~ n， j = n；这样进行处理。</p>
+<p><img src="https://blogmypic.oss-cn-beijing.aliyuncs.com/img/20200804210853.png"></p>
+<p>dp分析</p>
+<p>状态表示f[i][j]:</p>
+<blockquote>
+<ul>
+<li>集合： f[i][j] 表示，选i个物品，恰好背包装满容量为j。</li>
+<li>属性： Count</li>
+</ul>
+</blockquote>
+<p>状态计算</p>
+<blockquote>
+<ul>
+<li>第i件可以选择0， 1， 2， 3， 4 …， s件，恰好装满</li>
+<li>所以就等于集合的相加。</li>
+<li>状态转移方程就可以写为： $f[i][j] = f[i - 1][j] + f[i - 1][j - i] + f[i - 1][j - 2i]….f[i - 1][j - si]$</li>
+</ul>
+</blockquote>
+<p>状态转移方程优化：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">f[i][j] = f[i - <span class="number">1</span>][j] + f[i - <span class="number">1</span>][j - i] + f[i - <span class="number">1</span>][j - <span class="number">2</span>i]....f[i - <span class="number">1</span>][j - si]</span><br><span class="line">f[i][j - i] =           f[i - <span class="number">1</span>][j - i] + f[i - <span class="number">1</span>][j - <span class="number">2</span>i]....f[i - <span class="number">1</span>][j - si]</span><br></pre></td></tr></table></figure>
+<p>所以，状态转移方程就可以写为 $f[i][j] = f[i - 1][j] + f[i][j - i]$</p>
+<p>同样可以优化为1维度。这里只需要从小到大进行循环就行。   $f[j] = f[j] + f[j - i]$</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;algorithm&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> N = <span class="number">1010</span>, mod = <span class="number">1e9</span> + <span class="number">7</span>;</span><br><span class="line"><span class="keyword">int</span> n;</span><br><span class="line"><span class="keyword">int</span> f[N];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">cin</span> &gt;&gt; n;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//初始化</span></span><br><span class="line">    f[<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> j = i; j &lt;= n; j++)</span><br><span class="line">            f[j] = (f[j] + f[j - i]) % mod;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; f[n] &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="方法二、计数DP分析"><a href="#方法二、计数DP分析" class="headerlink" title="方法二、计数DP分析"></a>方法二、计数DP分析</h3><p><img src="https://blogmypic.oss-cn-beijing.aliyuncs.com/img/20200804210903.png"></p>
+<p>计数dp分析：</p>
+<p>状态表示f[i][j]:</p>
+<blockquote>
+<ul>
+<li>集合： 表示累加和为i，累加和的长度为j的数</li>
+<li>属性： Count</li>
+</ul>
+</blockquote>
+<p>状态计算：</p>
+<blockquote>
+<ul>
+<li>分解为长度等于1和长度大于1两个部分</li>
+<li>如果长度等于1，f[i][j] = f[i - 1][j - 1]，f[i - 1][j - 1]长度为1</li>
+<li>如果长度大于1，f[i][j] = f[i - j][j] 表示i - j的数的长度为j的值</li>
+<li>所以某个数的长度就是： f[n][1] + f[n][2] … f[n][n]</li>
+</ul>
+</blockquote>
+<p>所以状态转移方程： $f[i][j] = f[i - 1][j - 1] + f[i - j][j]$</p>
+<p>C++实现：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;algorithm&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> N = <span class="number">1010</span>, mod = <span class="number">1e9</span> + <span class="number">7</span>;</span><br><span class="line"><span class="keyword">int</span> n;</span><br><span class="line"><span class="keyword">int</span> f[N][N];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">cin</span> &gt;&gt; n;</span><br><span class="line"></span><br><span class="line">    f[<span class="number">1</span>][<span class="number">1</span>] = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">2</span>; i &lt;= n; i++)</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">1</span>; j &lt;= i; j++)</span><br><span class="line">            f[i][j] = (f[i - <span class="number">1</span>][j - <span class="number">1</span>] + f[i - j][j]) % mod;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> res;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++) res = (res + f[n][i]) % mod;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; res &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+        <tag>算法基础</tag>
+        <tag>动态规划</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>最长上升子序列 II</title>
+    <url>/2020/08/04/%E6%9C%80%E9%95%BF%E4%B8%8A%E5%8D%87%E5%AD%90%E5%BA%8F%E5%88%97%20II/</url>
+    <content><![CDATA[<hr>
+<p>来源： <a href="https://www.acwing.com/problem/content/description/898/">https://www.acwing.com/problem/content/description/898/</a></p>
+<p>描述：</p>
+<p>给定一个长度为N的数列，求数值严格单调递增的子序列的长度最长是多少。</p>
+<hr>
+<p>个人觉得思路不算是动态规划，应该算是贪心：</p>
+<ul>
+<li>如果w[i] &gt; f[cnt] 的，那么直接加入到后面去。</li>
+<li>如果w[i] &lt;= f[cnt]， 那么找到一个大于w[i]的数，然后替换掉。(这里的查找使用二分法)。</li>
+</ul>
+<p>所以时间复杂度就是 $O(nlogn)$</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> N = <span class="number">1e5</span> + <span class="number">5</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> f[N], w[N];</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> n, cnt;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="built_in">cin</span> &gt;&gt; n;</span><br><span class="line">    <span class="keyword">for</span>( <span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) <span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>, &amp;w[i]);</span><br><span class="line"></span><br><span class="line">    f[++cnt] = w[<span class="number">0</span>];</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (w[i] &gt; f[cnt]) f[++cnt] = w[i];</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">int</span> l = <span class="number">1</span>, r = cnt;</span><br><span class="line">            <span class="keyword">while</span> (l &lt; r) &#123;</span><br><span class="line">                <span class="keyword">int</span> mid  = l + r &gt;&gt; <span class="number">1</span>;</span><br><span class="line">                <span class="keyword">if</span> (f[mid] &gt;= w[i]) r  = mid;</span><br><span class="line">                <span class="keyword">else</span> l = mid + <span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            f[l] = w[i];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; cnt &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+        <tag>算法基础</tag>
+        <tag>动态规划</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>最短编辑距离</title>
+    <url>/2020/08/04/%E6%9C%80%E7%9F%AD%E7%BC%96%E8%BE%91%E8%B7%9D%E7%A6%BB/</url>
+    <content><![CDATA[<hr>
+<p>来源： <a href="https://www.acwing.com/problem/content/description/904/">https://www.acwing.com/problem/content/description/904/</a></p>
+<p>描述：</p>
+<p>给定两个字符串A和B，现在要将A经过若干操作变为B，可进行的操作有：</p>
+<p>1.删除–将字符串A中的某个字符删除。</p>
+<p>2.插入–在字符串A的某个位置插入某个字符。</p>
+<p>3.替换–将字符串A中的某个字符替换为另一个字符。</p>
+<p>现在请你求出，将A变为B至少需要进行多少次操作。</p>
+<hr>
+<p><img src="https://blogmypic.oss-cn-beijing.aliyuncs.com/img/20200804210934.png"></p>
+<p>dp分析：</p>
+<p>分别为两个部分，一个是状态表示，一个是状态计算，</p>
+<p>状态表示, f[i][j]：</p>
+<blockquote>
+<ul>
+<li>f[i][j] 表示： 以a[1 ~ i] 变成 b[1 ~ j] 所需要的操作数目</li>
+<li>属性： Min</li>
+</ul>
+</blockquote>
+<p>状态计算, 集合划分：</p>
+<blockquote>
+<ul>
+<li>删除：  a[1 ~ i] 比 b[1 ~ j] 长度长，那么删除a[i]后相等，f[i][j] = f[i - 1][j] + 1(操作数)</li>
+<li>添加：  a[1 ~ i] 比 b[1 ~ j] 长度短，那么添加a[i]后相等，f[i][j] = f[i][j - 1] + 1(操作数)</li>
+<li>修改：  a[i] == a[j] 那么f[i][j] = f[i - 1][j - 1] 否者就是f[i][j] = f[i - 1][j - 1] + 1</li>
+</ul>
+</blockquote>
+<p>所以状态转移方程就是: $f[i][j] = min(f[i - 1][j] + 1, f[i][j - 1] + 1, f[i - 1][j - 1] + 1)$</p>
+<p>在这里需要进行表格初始化，当stra等于长度等于0的时候变为strb, 以及当strb长度为0的时候stra变成strb。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;algorithm&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> N = <span class="number">1010</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">char</span> a[N], b[N];</span><br><span class="line"><span class="keyword">int</span> f[N][N];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n, m;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">&quot;%d%s&quot;</span>, &amp;n, a + <span class="number">1</span>);</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">&quot;%d%s&quot;</span>, &amp;m, b + <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//初始化，a = 0，b != 0变为b; a != 0, b = 0变为b</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;= m; i++) f[<span class="number">0</span>][i] = i;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;= n; i++) f[i][<span class="number">0</span>] = i;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">1</span>; j &lt;= m; j++) &#123;</span><br><span class="line">            f[i][j] = <span class="built_in">min</span>(f[i - <span class="number">1</span>][j] + <span class="number">1</span>, f[i][j - <span class="number">1</span>] + <span class="number">1</span>);</span><br><span class="line">            <span class="keyword">if</span> (a[i] == b[j]) f[i][j] = <span class="built_in">min</span>(f[i][j], f[i - <span class="number">1</span>][j - <span class="number">1</span>]);</span><br><span class="line">            <span class="keyword">else</span> f[i][j] = <span class="built_in">min</span>(f[i][j], f[i - <span class="number">1</span>][j - <span class="number">1</span>] + <span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; f[n][m] &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+        <tag>算法基础</tag>
+        <tag>动态规划</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>最长公共子序列</title>
+    <url>/2020/08/04/%E6%9C%80%E9%95%BF%E5%85%AC%E5%85%B1%E5%AD%90%E5%BA%8F%E5%88%97/</url>
+    <content><![CDATA[<hr>
+<p>来源： <a href="https://www.acwing.com/problem/content/description/899/">https://www.acwing.com/problem/content/description/899/</a></p>
+<p>描述：</p>
+<p>给定两个长度分别为N和M的字符串A和B，求既是A的子序列又是B的子序列的字符串长度最长是多少。</p>
+<hr>
+<p><img src="https://blogmypic.oss-cn-beijing.aliyuncs.com/img/20200804211005.png"></p>
+<p>dp分析：</p>
+<p>首先确定状态f[i][j], 因为是两个字符串，所以用f[i][j]两维数组表示比较好(经验)。</p>
+<p>dp分析分为： 状态表示，和状态计算。</p>
+<p>状态表示：</p>
+<blockquote>
+<ul>
+<li>集合: f[i][j] 表示以a[i]字母结尾，和以b[j]字母结尾的最长公共子序列。</li>
+<li>属性：Max</li>
+</ul>
+</blockquote>
+<p>状态计算：</p>
+<blockquote>
+<p>集合划分：分成4个部分</p>
+<ul>
+<li>1.不取a[i],b[j]</li>
+<li>2.取a[i], b[j]</li>
+<li>3.取a[i], 不取b[j]</li>
+<li>4.不取a[i], 取b[j];</li>
+</ul>
+</blockquote>
+<p>所以状态方程就是：$f[i][j] = max(f[i - 1][j - 1], f[i - 1][j], f[i][j - 1], f[i - 1][j - 1] + 1)$</p>
+<p>但是因为$f[i][j]$表示以$a[i], b[j]$字符结尾的最长子序列，所以$f[i - 1][j] $包含$f[i - 1][j - 1]$的情况，所以状态转移方程就可以只写为：</p>
+<p>$f[i][j] = max(f[i - 1][j], f[i][j - 1], f[i - 1][j - 1] + 1)$</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;algorithm&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> N = <span class="number">1010</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">char</span> a[N], b[N];</span><br><span class="line"><span class="keyword">int</span> f[N][N];</span><br><span class="line"><span class="keyword">int</span> n, m;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">cin</span> &gt;&gt; n &gt;&gt; m;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">&quot;%s%s&quot;</span>, a + <span class="number">1</span>, b + <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">1</span>; j &lt;= m; j++)&#123;</span><br><span class="line">            f[i][j] = <span class="built_in">max</span>(f[i - <span class="number">1</span>][j], f[i][j - <span class="number">1</span>]);</span><br><span class="line">            <span class="keyword">if</span> (a[i] == b[j])</span><br><span class="line">                f[i][j] = <span class="built_in">max</span>(f[i][j], f[i - <span class="number">1</span>][j - <span class="number">1</span>] + <span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; f[n][m] &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+        <tag>算法基础</tag>
+        <tag>动态规划</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>最长上升子序列</title>
+    <url>/2020/08/04/%E6%9C%80%E9%95%BF%E4%B8%8A%E5%8D%87%E5%AD%90%E5%BA%8F%E5%88%97/</url>
+    <content><![CDATA[<hr>
+<p>来源： <a href="https://www.acwing.com/problem/content/description/897/">https://www.acwing.com/problem/content/description/897/</a></p>
+<p>题目描述：</p>
+<p>给定一个长度为N的数列，求数值严格单调递增的子序列的长度最长是多少。</p>
+<p>首先要求几个东西，一个是状态状态分析，一个是状态计算。状态分析就是提出一种暴力的解决方式，然后再用DP(表格法)的方式去解决这个问题。</p>
+<p>首先是表格的长度，因为中庸存放等长的数组，所以就只用输入长度N的一维数组就可以了，然后把f[i]和w[i]进行联系起来。所以这里就需要表示f[i]的意义了。</p>
+<ul>
+<li><p>状态表示</p>
+<blockquote>
+<ul>
+<li>集合的划分, f[i]表示： 以w[i]结尾的最长子序列，默认为1</li>
+<li>属性 ： max</li>
+</ul>
+</blockquote>
+</li>
+<li><p>状态计算</p>
+<blockquote>
+<ul>
+<li>也就是f[i]的划分，也就是f[i] 的计算。</li>
+<li>遍历j &lt;- 1 to i, 如果w[i] &gt; w[j]， 更新f[i] 的值</li>
+</ul>
+</blockquote>
+</li>
+</ul>
+<p>伪代码：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">res = <span class="number">1</span></span><br><span class="line"><span class="keyword">for</span> i &lt;- <span class="number">1</span> to n</span><br><span class="line">    <span class="keyword">for</span> j &lt;- <span class="number">1</span> to i - <span class="number">1</span></span><br><span class="line">        <span class="keyword">if</span> w[i] &gt; w[j]</span><br><span class="line">            f[i] = max(f[i], f[j] + <span class="number">1</span>)</span><br><span class="line">    res = max(res, f[i])</span><br></pre></td></tr></table></figure>
+
+<p>c++ 实现：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;algorithm&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> N = <span class="number">1100</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> w[N], f[N];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n;</span><br><span class="line">    <span class="built_in">cin</span> &gt;&gt; n;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++) <span class="built_in">cin</span> &gt;&gt; w[i];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> res = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        f[i] = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">1</span>; j &lt; n; j++)</span><br><span class="line">            <span class="keyword">if</span> (w[i] &gt; w[j])</span><br><span class="line">                f[i] = <span class="built_in">max</span>(f[i], f[j] + <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">        res = <span class="built_in">max</span>(res, f[i]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; res &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+        <tag>算法基础</tag>
+        <tag>动态规划</tag>
       </tags>
   </entry>
   <entry>
@@ -271,8 +982,107 @@
 </li>
 </ol>
 ]]></content>
+      <categories>
+        <category>服务器</category>
+      </categories>
       <tags>
         <tag>服务器</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>石子合并</title>
+    <url>/2020/08/04/%E7%9F%B3%E5%AD%90%E5%90%88%E5%B9%B6/</url>
+    <content><![CDATA[<hr>
+<p>来源： <a href="https://www.acwing.com/problem/content/284/">https://www.acwing.com/problem/content/284/</a></p>
+<p>描述：</p>
+<p>设有N堆石子排成一排，其编号为1，2，3，…，N。</p>
+<p>每堆石子有一定的质量，可以用一个整数来描述，现在要将这N堆石子合并成为一堆。</p>
+<p>每次只能合并相邻的两堆，合并的代价为这两堆石子的质量之和，合并后与这两堆石子相邻的石子将和新堆相邻，合并时由于选择的顺序不同，合并的总代价也不相同。</p>
+<p>例如有4堆石子分别为 1 3 5 2， 我们可以先合并1、2堆，代价为4，得到4 5 2， 又合并 1，2堆，代价为9，得到9 2 ，再合并得到11，总代价为4+9+11=24；</p>
+<p>如果第二步是先合并2，3堆，则代价为7，得到4 7，最后一次合并代价为11，总代价为4+7+11=22。</p>
+<p>问题是：找出一种合理的方法，使总的代价最小，输出最小代价。</p>
+<hr>
+<p>首先是因为是相邻的区间进行合并，所以就是一个分界点，分成两个部分，一个部分左边，一部分右边。这样就符合题意的相邻两个部分进行合并，这样只用以2堆，3堆，4堆，一直到长度为n堆进行合并就行了。因为是区间DP问题，所以状态表示为$f[i][j]$。</p>
+<p><img src="https://blogmypic.oss-cn-beijing.aliyuncs.com/img/20200804211015.png"></p>
+<p>区间dp分析：</p>
+<p>状态表示$f[i][j]$</p>
+<blockquote>
+<ul>
+<li>集合： 区间i ~ j 合并所需要的代价</li>
+<li>属性： Min</li>
+</ul>
+</blockquote>
+<p>状态计算：</p>
+<blockquote>
+<ul>
+<li>以k为分界点，把区间分成两部分，k可以取值1, 2, 3, 4…., k - 1</li>
+<li>合并的代价就是区间的长度的价值</li>
+<li>状态转移方程就是： $f[i][j] = min(f[i][k] + f[k + 1][j] + s[j] - s[i - 1]), k = 1, 2, 3, 4…, k - 1$</li>
+</ul>
+</blockquote>
+<p>写区间dp问题，注意就是区间的写法。如何写区间，调整区间。</p>
+<p>伪代码：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> (len = <span class="number">2</span>; len &lt;= n; len++)</span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">1</span>; i + len - <span class="number">1</span> &lt;= n; i++)</span><br><span class="line">        <span class="comment">// 枚举所有区间长度，从2开始</span></span><br><span class="line">        left = i, right = i + len - <span class="number">1</span></span><br><span class="line">        <span class="keyword">for</span>(k = <span class="number">1</span>; k &lt; right; k++)</span><br><span class="line">            <span class="comment">//状态转移方程</span></span><br><span class="line">            f[left][right] = <span class="built_in">min</span>(f[left][k] + f[k + <span class="number">1</span>][right] + s[right] - s[left - <span class="number">1</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment">//答案 区间 1 ~ n</span></span><br><span class="line">f[<span class="number">1</span>][n]</span><br></pre></td></tr></table></figure>
+
+<p>C++实现：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;algorithm&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> N = <span class="number">310</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> n;</span><br><span class="line"><span class="keyword">int</span> s[N];</span><br><span class="line"><span class="keyword">int</span> f[N][N];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">cin</span> &gt;&gt; n;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++) <span class="built_in">cin</span> &gt;&gt; s[i];</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++) s[i] += s[i - <span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> len = <span class="number">2</span>; len &lt;= n; len++)</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>; i + len - <span class="number">1</span> &lt;= n; i++) &#123;</span><br><span class="line">            <span class="keyword">int</span> l = i, r = i + len - <span class="number">1</span>;</span><br><span class="line">            f[l][r] = <span class="number">1e8</span>;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> k = l; k &lt; r; k++)</span><br><span class="line">                f[l][r] = <span class="built_in">min</span>(f[l][r], f[l][k] + f[k + <span class="number">1</span>][r] + s[r] - s[l - <span class="number">1</span>]);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; f[<span class="number">1</span>][n] &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>Python 实现：</p>
+<figure class="highlight py"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">N = <span class="number">310</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span>():</span></span><br><span class="line">    <span class="comment"># f 表示状态, s表示数据和</span></span><br><span class="line">    f = [[<span class="number">0</span>]*N <span class="keyword">for</span> _ <span class="keyword">in</span> range(N)]</span><br><span class="line">    s = [<span class="number">0</span>]*N</span><br><span class="line">    n = int(input())</span><br><span class="line">    <span class="comment"># 写入数据从角标1开始</span></span><br><span class="line">    s[<span class="number">1</span>:] = map(int, input().split())</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, n + <span class="number">1</span>):</span><br><span class="line">        s[i] += s[i - <span class="number">1</span>]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> len <span class="keyword">in</span> range(<span class="number">2</span>, n + <span class="number">1</span>):</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, n):</span><br><span class="line">            <span class="keyword">if</span> i + len - <span class="number">1</span> &lt;= n:</span><br><span class="line">                l, r = i, i + len - <span class="number">1</span></span><br><span class="line">                f[l][r] = <span class="number">1e8</span></span><br><span class="line">                <span class="keyword">for</span> k <span class="keyword">in</span> range(l, r):</span><br><span class="line">                    <span class="comment"># 状态转移方程</span></span><br><span class="line">                    f[l][r] = min(f[l][r], f[l][k] + f[k + <span class="number">1</span>][r] + s[r] - s[l - <span class="number">1</span>])</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 表示从1 ~ n区间</span></span><br><span class="line">    print(f[<span class="number">1</span>][n])</span><br><span class="line"></span><br><span class="line">main()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+        <tag>算法基础</tag>
+        <tag>动态规划</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>编辑距离</title>
+    <url>/2020/08/04/%E7%BC%96%E8%BE%91%E8%B7%9D%E7%A6%BB/</url>
+    <content><![CDATA[<hr>
+<p>来源： <a href="https://www.acwing.com/problem/content/901/">https://www.acwing.com/problem/content/901/</a></p>
+<p>描述：</p>
+<p>给定n个长度不超过10的字符串以及m次询问，每次询问给出一个字符串和一个操作次数上限。</p>
+<p>对于每次询问，请你求出给定的n个字符串中有多少个字符串可以在上限操作次数内经过操作变成询问给出的字符串。</p>
+<p>每个对字符串进行的单个字符的插入、删除或替换算作一次操作。</p>
+<p>输入格式<br>第一行包含两个整数n和m。</p>
+<p>接下来n行，每行包含一个字符串，表示给定的字符串。</p>
+<p>再接下来m行，每行包含一个字符串和一个整数，表示一次询问。</p>
+<p>字符串中只包含小写字母，且长度均不超过10。</p>
+<hr>
+<p>编辑距离是最短编辑距离的应用，只是有些地方时是C++的一些应用，状态方程都是一样的。但是在理一遍，加清思路分析。</p>
+<p><img src="https://blogmypic.oss-cn-beijing.aliyuncs.com/img/20200804211030.png"></p>
+<p>动态规划，线性dp分析：</p>
+<p>状态表示f[i][j]:</p>
+<blockquote>
+<ul>
+<li>集合：表示a[1 ~ i] 变成 b[1 ~ j]所需要的代价</li>
+<li>属性： min</li>
+</ul>
+</blockquote>
+<p>状态计算:</p>
+<blockquote>
+<ul>
+<li>添加： 添加之前的是b[j],所以添加之前，需要a[i]和b[j - 1]进行匹配。 所以就是f[i]][j - 1] + 1</li>
+<li>删除： 删除之后a[i]和b[j]相等，所以删除后是f[i - 1][j], 那么f[i - 1][j] + 1 就是f[i][j]</li>
+<li>修改： a[i - 1]和b[j - 1]都相等，那么看a[i]和b[j]，如果相等 + 0，不等 + 1</li>
+</ul>
+</blockquote>
+<p>所以状态转移方程就是：</p>
+<p>$f[i][j] = min(f[i - 1][j] + 1, f[i][j - 1] + 1, f[i - 1][j - 1] + 1 / 0 )$</p>
+<p>注意就是C++的字符串的一些用法。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> N = <span class="number">1010</span>, M = <span class="number">15</span>;</span><br><span class="line"><span class="keyword">char</span> w[N][M];</span><br><span class="line"><span class="keyword">int</span> f[M][M];</span><br><span class="line"><span class="keyword">int</span> n, m;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">edit</span><span class="params">(<span class="keyword">char</span> a[], <span class="keyword">char</span> b[])</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 从a + 1, b + 1开始统计a, b两个字符串的长度</span></span><br><span class="line">    <span class="keyword">int</span> la = <span class="built_in">strlen</span>(a + <span class="number">1</span>), lb = <span class="built_in">strlen</span>(b + <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= lb; i++) f[<span class="number">0</span>][i] = i;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= la; i++) f[i][<span class="number">0</span>] = i;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= la; i++)</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">1</span>; j &lt;= lb; j++) &#123;</span><br><span class="line">        f[i][j] = <span class="built_in">min</span>(f[i][j - <span class="number">1</span>], f[i - <span class="number">1</span>][j]) + <span class="number">1</span>;</span><br><span class="line">        f[i][j] = <span class="built_in">min</span>(f[i][j], f[i - <span class="number">1</span>][j - <span class="number">1</span>] + (a[i] != b[j]));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> f[la][lb];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">cin</span> &gt;&gt; n &gt;&gt; m;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++) <span class="built_in">scanf</span>(<span class="string">&quot;%s&quot;</span>, w[i] + <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span>(m--) &#123;</span><br><span class="line">    <span class="keyword">char</span> tmp[M];</span><br><span class="line">    <span class="keyword">int</span> limit;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">&quot;%s%d&quot;</span>, tmp + <span class="number">1</span>, &amp;limit);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> res = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">        <span class="keyword">if</span> (edit(w[i], tmp) &lt;= limit) res ++;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; res &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+        <tag>算法基础</tag>
+        <tag>动态规划</tag>
       </tags>
   </entry>
 </search>
