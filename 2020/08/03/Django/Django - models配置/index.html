@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    
+    <title>
+        Django - models模型配置 | Mao
+    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+        <link rel="shortcut icon" href="/images/favicon.jpg">
+    
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <script id="hexo-configurations">
+    let CONFIG = {"hostname":"wallxiaoming.github.io","root":"/","localsearch":{"enable":true,"trigger":"auto","unescape":false,"preload":false},"themeInfo":{"name":"ILS","version":"1.1.2","author":"XPoet","repository":"https://github.com/XPoet/hexo-theme-ils"},"path":"search.xml"};
+  </script>
+<meta name="generator" content="Hexo 5.0.0"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+
+
+<body>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="page-template">
+    <div class="page-top">
+        <header class="header-wrapper">
+
+    <div class="header-progress"></div>
+
+    <div class="header-content">
+
+        <a class="logo-title" href="/">
+            Mao
+        </a>
+
+        <ul class="menu-list">
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/"
+                    >
+                        HOME
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/archives"
+                    >
+                        ARCHIVES
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/about"
+                    >
+                        ABOUT
+                    </a>
+                </li>
+            
+        </ul>
+
+        <div class="menu-bar">
+            <div class="menu-bar-middle"></div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item">
+                    <a class=""
+                       href="/">HOME</a>
+                </li>
+            
+                <li class="drawer-menu-item">
+                    <a class=""
+                       href="/archives">ARCHIVES</a>
+                </li>
+            
+                <li class="drawer-menu-item">
+                    <a class=""
+                       href="/about">ABOUT</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+    </div>
+
+    <div class="page-middle ">
+
+        <main class="main-content normal-code-theme">
+
+            <div class="main-content-left">
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <h3><a class="title-hover-animation">Django - models模型配置</a></h3>
+        </div>
+
+        <div class="meta-info">
+            <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa fa-calendar-o"></i> 2020-08-03 15:07:32
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa fa-folder"></i>
+            <ul>
+                
+                    <li>
+                        <a href="/categories/Django/">Django</a>
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa fa-tags"></i>
+            <ul>
+                
+                    <li>
+                        <a href="/tags/django/">django</a>
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+</div>
+        </div>
+
+        <div class="article-content markdown-body">
+            <hr>
+<p>几种关系：</p>
+<p>一对一的关系： 一个作者只能有一个作者的详情，就是一对一</p>
+<p>多对一的关系： 多本书籍对应一个出版社</p>
+<p>多对多的关系： 一本书对应多个作者，一个作者也能对应多书籍</p>
+<p><code>models.CASCADE</code> - 表示级联</p>
+<ul>
+<li>一对一的关系 OneToOneField(on_delete=models.CASCADE)</li>
+<li>多对一的关系 ForeignKey(on_delete=models.CASCADE)</li>
+<li>多对多的关系 ManyToManyField</li>
+</ul>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">from</span> django.db <span class="keyword">import</span> models</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Publisher</span>(<span class="params">models.Model</span>):</span></span><br><span class="line">    name = models.CharField(<span class="string">&quot;名称&quot;</span>, max_length=<span class="number">30</span>)  <span class="comment"># 可以在第一个position添加为verbose_name</span></span><br><span class="line">    address = models.CharField(max_length=<span class="number">50</span>, verbose_name=<span class="string">&quot;地址&quot;</span>)  <span class="comment"># 可以使用verbose_name标签</span></span><br><span class="line">    city = models.CharField(max_length=<span class="number">10</span>)</span><br><span class="line">    state_province = models.CharField(max_length=<span class="number">20</span>)</span><br><span class="line">    country = models.CharField(max_length=<span class="number">50</span>)</span><br><span class="line">    website = models.URLField()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Author</span>(<span class="params">models.Model</span>):</span></span><br><span class="line">    name = models.CharField(max_length=<span class="number">20</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">AuthorDetail</span>(<span class="params">models.Model</span>):</span></span><br><span class="line">    sex = models.BooleanField(max_length=<span class="number">1</span>, choices=((<span class="number">0</span>, <span class="string">&quot;男&quot;</span>), (<span class="number">1</span>, <span class="string">&quot;女&quot;</span>)))</span><br><span class="line">    email = models.EmailField()</span><br><span class="line">    address = models.CharField(max_length=<span class="number">50</span>)</span><br><span class="line">    brithday = models.DateField()</span><br><span class="line">    author = models.OneToOneField(Author, on_delete=models.CASCADE)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Book</span>(<span class="params">models.Model</span>):</span></span><br><span class="line">    title = models.CharField(max_length=<span class="number">30</span>)</span><br><span class="line">    authors = models.ManyToManyField(Author)</span><br><span class="line">    publisher = models.ForeignKey(Publisher, on_delete=models.CASCADE)</span><br><span class="line">    publication_date = models.DateField()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>这里需要注意，就是你之前如果migrate数据库，那么有时候会报错，在进行迁移的时候是加迁移，并不会再创建表格。</p>
+<p>定义数据模型的扩展属性 <code>class Meta</code>：</p>
+<p>详细文档：<br>
+<a target="_blank" rel="noopener" href="https://docs.djangoproject.com/zh-hans/3.0/topics/db/models/">https://docs.djangoproject.com/zh-hans/3.0/topics/db/models/</a><br>
+<a target="_blank" rel="noopener" href="https://docs.djangoproject.com/zh-hans/3.0/ref/models/options/">https://docs.djangoproject.com/zh-hans/3.0/ref/models/options/</a></p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Meta</span>:</span></span><br><span class="line">    verbose_name = <span class="string">&quot;名称&quot;</span></span><br><span class="line">    verbose_name_plural = <span class="string">&quot;复数名称&quot;</span></span><br><span class="line">    ordering = [<span class="string">&#x27;排序字段&#x27;</span>]  <span class="comment"># 比如以id倒叙   ordering = [&#x27;-id&#x27;]</span></span><br></pre></td></tr></table></figure>
+<p>数据库同步：</p>
+<p>一个目录： migrations</p>
+<blockquote>
+<ul>
+<li>里面存放的是makemigrations命令生成的数据库脚本。并且必须要有<code>__init__.py</code>文件夹才可以用</li>
+</ul>
+</blockquote>
+<p>一张数据表，在数据库中: <code>app_migrations</code></p>
+<blockquote>
+<ul>
+<li>app: app名字</li>
+<li>name: 脚本的文件名称</li>
+<li>applied: 脚本执行的时间</li>
+</ul>
+</blockquote>
+<p>数据库相关的命令：</p>
+<blockquote>
+<ul>
+<li>flush 清空数据库,比较危险</li>
+<li>makemigrations 生成数据库脚本</li>
+<li>migrate 同步数据库</li>
+<li>showmigrations 查看生成数据库的同步脚本</li>
+<li>sqlflush 查看清空数据库的脚本</li>
+<li>sqlmigrate 查看数据库同步的sql语句</li>
+</ul>
+</blockquote>
+<p>在出现错误的时候可以migrations文件除了<code>__init__.py</code>删除掉，再删除数据库创建一个新数据库。</p>
+
+        </div>
+
+        <div class="article-nav">
+            
+                <div class="article-prev">
+                    <a class="prev btn"
+                       rel="prev"
+                       href="/2020/08/03/Django/Django%20-%20admin%E7%AE%A1%E7%90%86/"
+                    >
+                        <i class="fa fa-chevron-left"></i> <span class="post-nav-title-item">Django - admin管理</span><span class="post-nav-item">Prev posts</span>
+                    </a>
+                </div>
+            
+            
+                <div class="article-next">
+                    <a class="next btn"
+                       rel="next"
+                       href="/2020/08/03/Django/Django%20-%20form%E8%A1%A8%E5%8D%95/"
+                    >
+                        <span class="post-nav-title-item">Django - form表单</span><span class="post-nav-item">Next posts</span> <i class="fa fa-chevron-right"></i>
+                    </a>
+                </div>
+            
+        </div>
+
+        <div class="comment-container">
+            <div class="comments-container">
+    
+</div>
+        </div>
+    </div>
+</div>
+
+    <div class="article-toc-container fade-in-down-animation">
+        <div class="article-toc">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        
+    </div>
+</div>
+        </div>
+    </div>
+
+
+                
+
+            </div>
+
+            
+
+        </main>
+
+        <div class="sidebar-tools">
+            <div class="tools-container">
+    <ul class="tools-list">
+        
+            <li class="search popup-trigger">
+                <i class="fa fa-search"></i>
+            </li>
+            
+<script src="/js/local-search.js"></script>
+
+        
+        <li class="mode-toggle">
+            <i class="fa fa-moon-o"></i>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+
+        
+            <div class="scroll-to-top">
+                <ul>
+                    <li>
+                        <!--<i class="fa fa-caret-up"></i>-->
+                        <span class="scroll-percent"></span>
+                    </li>
+                </ul>
+            </div>
+        
+    </div>
+
+    <div class="page-bottom">
+        <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy; 2020 <a href="/">ILS</a>
+        </div>
+
+
+        <a href="http://www.beian.miit.gov.cn/"  target="_blank">蜀ICP备20024492号</a>
+
+
+
+
+        
+    </div>
+</footer>
+
+    </div>
+</div>
+
+    <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-icon">
+            <i class="fa fa-search"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/js/main.js"></script>
+<script src="/js/header-shrink.js"></script>
+<script src="/js/toggle-mode.js"></script>
+
+
+
+    
+<script src="/js/scroll-to-top.js"></script>
+
+
+
+
+
+    
+        
+<script src="/js/code-copy.js"></script>
+
+    
+
+    
+        
+<script src="/lib/anime.min.js"></script>
+<script src="/js/toc.js"></script>
+
+    
+
+
+
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<!-- <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</body>
+</html>

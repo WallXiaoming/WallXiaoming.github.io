@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    
+    <title>
+        Django - 部署到Linux服务器 | Mao
+    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+        <link rel="shortcut icon" href="/images/favicon.jpg">
+    
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <script id="hexo-configurations">
+    let CONFIG = {"hostname":"wallxiaoming.github.io","root":"/","localsearch":{"enable":true,"trigger":"auto","unescape":false,"preload":false},"themeInfo":{"name":"ILS","version":"1.1.2","author":"XPoet","repository":"https://github.com/XPoet/hexo-theme-ils"},"path":"search.xml"};
+  </script>
+<meta name="generator" content="Hexo 5.0.0"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+
+
+<body>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="page-template">
+    <div class="page-top">
+        <header class="header-wrapper">
+
+    <div class="header-progress"></div>
+
+    <div class="header-content">
+
+        <a class="logo-title" href="/">
+            Mao
+        </a>
+
+        <ul class="menu-list">
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/"
+                    >
+                        HOME
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/archives"
+                    >
+                        ARCHIVES
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/about"
+                    >
+                        ABOUT
+                    </a>
+                </li>
+            
+        </ul>
+
+        <div class="menu-bar">
+            <div class="menu-bar-middle"></div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item">
+                    <a class=""
+                       href="/">HOME</a>
+                </li>
+            
+                <li class="drawer-menu-item">
+                    <a class=""
+                       href="/archives">ARCHIVES</a>
+                </li>
+            
+                <li class="drawer-menu-item">
+                    <a class=""
+                       href="/about">ABOUT</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+    </div>
+
+    <div class="page-middle ">
+
+        <main class="main-content normal-code-theme">
+
+            <div class="main-content-left">
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <h3><a class="title-hover-animation">Django - 部署到Linux服务器</a></h3>
+        </div>
+
+        <div class="meta-info">
+            <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa fa-calendar-o"></i> 2020-08-03 18:07:32
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa fa-folder"></i>
+            <ul>
+                
+                    <li>
+                        <a href="/categories/Django/">Django</a>
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa fa-tags"></i>
+            <ul>
+                
+                    <li>
+                        <a href="/tags/django/">django</a>
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+</div>
+        </div>
+
+        <div class="article-content markdown-body">
+            <p>首先进行文件的打包：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip freeze &gt; requirements.txt</span><br></pre></td></tr></table></figure>
+<p>然后创建服务器， 进行ssh登录。</p>
+<h4 id="在服务器操作如下：">在服务器操作如下：</h4>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 进行服务器软件更新</span></span><br><span class="line">apt update &amp;&amp; apt upgrade</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置服务器的名称为Django-server</span></span><br><span class="line">hostnamectl <span class="built_in">set</span>-hostname django-server</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看hostname</span></span><br><span class="line">hostname</span><br><span class="line"></span><br><span class="line">nano /etc/hosts</span><br><span class="line"><span class="comment"># 添加</span></span><br><span class="line">youripaddress django-server</span><br><span class="line"></span><br><span class="line"><span class="comment"># 添加账户</span></span><br><span class="line">adduser &lt;username&gt;</span><br><span class="line">adduser &lt;username&gt; sudo</span><br><span class="line"></span><br><span class="line"><span class="comment"># 然后使用newuser 进行ssh 连接</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 在本地电脑上操作</span></span><br><span class="line"><span class="comment"># 创建一个ssh目录, -p 为允许创建目录和子目录, ~ 表示为主目录下面</span></span><br><span class="line">mkdir -p ~/.ssh</span><br><span class="line"></span><br><span class="line"><span class="comment"># 在本地进行生成ssh key</span></span><br><span class="line">ssh-keygen -b 4096</span><br><span class="line"></span><br><span class="line"><span class="comment"># 本地的为id_ra 服务器为pub</span></span><br><span class="line"><span class="comment"># 传输pub key 到服务器</span></span><br><span class="line">scp ~/.ssh/id_rsa.pub username@ip:~/.ssh/authorized_keys</span><br><span class="line"></span><br><span class="line"><span class="comment"># 然后给.ssh 文件夹写入权限， 给.ssh 文件夹读取权限</span></span><br><span class="line">sudo chmod 700 ~/.ssh/</span><br><span class="line">sudo chmod 600 ~/.ssh/*</span><br><span class="line"></span><br><span class="line"><span class="comment"># 然后进行ssh, 不用密码连接</span></span><br><span class="line">ssh username@ip</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 在服务器上修改sshd_config</span></span><br><span class="line"><span class="comment"># passwordauthorize No</span></span><br><span class="line"><span class="comment"># rootlogin No</span></span><br><span class="line">nano /etc/ssh/sshd_config</span><br><span class="line"></span><br><span class="line"><span class="comment"># 重载ssh服务</span></span><br><span class="line">sudo systemctl restart sshd</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装防火墙</span></span><br><span class="line">sudo apt install ufw</span><br><span class="line"></span><br><span class="line"><span class="comment"># 更改防火墙</span></span><br><span class="line">sudo ufw default allow outgoing</span><br><span class="line">sudo ufw default deny incoming</span><br><span class="line">sudo ufw allow ssh</span><br><span class="line">sudo ufw allow 8000 <span class="comment"># django</span></span><br><span class="line">sudo ufw <span class="built_in">enable</span></span><br><span class="line">sudo ufw status <span class="comment"># ufw status</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 把requirements.txt 复制到工程文件下面, 然后传到服务器根目录下面</span></span><br><span class="line">scp -r project_name username@ipaddress:~/</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装python3-pip</span></span><br><span class="line">sudo apt install python3-pip</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装env</span></span><br><span class="line">sudo apt install python3-venv</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建env</span></span><br><span class="line">python3 -m venv project_name/venv</span><br><span class="line"></span><br><span class="line"><span class="comment"># 启动env</span></span><br><span class="line"><span class="built_in">cd</span> project_name</span><br><span class="line"><span class="built_in">source</span> venv/bin/activate</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装环境</span></span><br><span class="line">pip install -r requirements.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置Django -- settings -- ALLOWRD_HOSTED = [&#x27;ip_address&#x27;]</span></span><br><span class="line"><span class="comment"># 设置STATIC_ROOT = os.path.join(BASE_DIR, &#x27;static&#x27;)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 进行项目集合</span></span><br><span class="line">python manage.py collectstatic</span><br><span class="line">python manage.py runserver 0.0.0.0:8000</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装Apache2</span></span><br><span class="line">sudo apt install apache2</span><br><span class="line">sudo apt install libapache2-mod-wsgi-py3</span><br><span class="line"></span><br><span class="line"><span class="comment"># 进入Apache2设置</span></span><br><span class="line"><span class="built_in">cd</span> /etc/apache2/sites-available/</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建一个Django.conf</span></span><br><span class="line">sudo cp 000-default.conf django_project.conf</span><br><span class="line"></span><br><span class="line"><span class="comment"># 编辑django_project.conf</span></span><br><span class="line">sudo nano django_project.conf</span><br><span class="line"></span><br><span class="line"><span class="comment"># 在vitrulHost中添加下面代码</span></span><br><span class="line"></span><br><span class="line">Alias /static /home/<span class="string">&quot;&lt;username&gt;&quot;</span>/<span class="string">&quot;&lt;django_project&gt;&quot;</span>/static</span><br><span class="line">&lt;Directory /home/<span class="string">&quot;&lt;usernaem&gt;&quot;</span>/<span class="string">&quot;&lt;django_project&gt;&quot;</span>/static&gt;</span><br><span class="line">    Require all granted</span><br><span class="line">&lt;/Directory&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Alias /media /home/<span class="string">&quot;&lt;username&gt;&quot;</span>/<span class="string">&quot;&lt;django_project&gt;&quot;</span>/media</span><br><span class="line">&lt;Directory /home/<span class="string">&quot;&lt;usernaem&gt;&quot;</span>/<span class="string">&quot;&lt;django_project&gt;&quot;</span>/media&gt;</span><br><span class="line">    Require all granted</span><br><span class="line">&lt;/Directory&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;Directory /home/<span class="string">&quot;&lt;usernaem&gt;&quot;</span>/<span class="string">&quot;&lt;django_project&gt;&quot;</span>/<span class="string">&quot;&lt;django_project&gt;&quot;</span>&gt;</span><br><span class="line">    &lt;Files wsgi.py&gt;</span><br><span class="line">        Require all granted</span><br><span class="line">    &lt;/Files&gt;</span><br><span class="line">&lt;/Directory&gt;</span><br><span class="line"></span><br><span class="line">WSGIScriptAlias / /home/<span class="string">&quot;&lt;userneme&gt;&quot;</span>/<span class="string">&quot;&lt;django_project&gt;&quot;</span>/<span class="string">&quot;&lt;django_project&gt;&quot;</span>/wsgi.py</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">WSGIDaemonProcess django_app python-path=/home/<span class="string">&quot;&lt;username&gt;&quot;</span>/<span class="string">&quot;&lt;django_project&gt;&quot;</span>/venv</span><br><span class="line"></span><br><span class="line">WSGIProcessGroup django_app</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 启动Django设置</span></span><br><span class="line">sudo a2ensite django_project</span><br><span class="line"></span><br><span class="line"><span class="comment"># 关闭000-default.conf</span></span><br><span class="line">sudo a2dissite 000-default.conf</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置Apache2服务器权限</span></span><br><span class="line">sudo chown :www-data django_project/db.sqlite3</span><br><span class="line">sudo chmod 755 django_project/db.sqlite3</span><br><span class="line">sudo chown :www-data django_project</span><br><span class="line">sudo chown -R :www-data django_project/media</span><br><span class="line">sudo chmod -R 755 django_project/media</span><br><span class="line">sudo chmod 775 django_project/</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 设置隐藏服务器密码</span></span><br><span class="line">sudo touch /etc/config.json</span><br><span class="line"></span><br><span class="line"><span class="comment"># nano /etc/config.json</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 在django_project -- settings 中</span></span><br><span class="line"><span class="comment"># import json</span></span><br><span class="line"><span class="comment"># with open(&quot;etc/config.json&quot;) as config_file:</span></span><br><span class="line"><span class="comment">#    config = json.load(config_file)</span></span><br><span class="line"><span class="comment"># SECRET_KEY = config[&#x27;SECRET_KEY&#x27;]</span></span><br><span class="line"><span class="comment"># DEBUG = Flase</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除8000端口</span></span><br><span class="line">sudo ufw delete allow 8000</span><br><span class="line"></span><br><span class="line"><span class="comment"># 添加http/tcp</span></span><br><span class="line">sudo ufw allow http/tcp</span><br><span class="line"></span><br><span class="line"><span class="comment"># 重启服务器</span></span><br><span class="line">sudo server apache2 restart</span><br><span class="line">systemctl reload apache2</span><br></pre></td></tr></table></figure>
+<p><code>/etc/config.json</code>文件</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="string">&quot;SECRET_KEY&quot;</span>: <span class="string">&quot;xxx&quot;</span>,</span><br><span class="line">    <span class="string">&quot;EMAIL_USER&quot;</span>: <span class="string">&quot;xxx@163.com&quot;</span>,</span><br><span class="line">    <span class="string">&quot;EMAIL_PASS&quot;</span>: <span class="string">&quot;xxx&quot;</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后在<code>django_project -- setings.py</code>中进行如下配置</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> open(<span class="string">&#x27;/etc/config.json&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    conf = json.load(f)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">SECRET_KEY = conf[<span class="string">&#x27;SECRTY_KEY&#x27;</span>]</span><br></pre></td></tr></table></figure>
+<p>或者在部署的时候进行根目录部署</p>
+<p>然后输出日志器。在根目录下面进行创建</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&lt;VirtualHost *:<span class="number">80</span>&gt;</span><br><span class="line"></span><br><span class="line">    ServerAdmin webmaster@localhost</span><br><span class="line">    DocumentRoot /<span class="keyword">var</span>/www/html</span><br><span class="line"></span><br><span class="line">    ErrorLog /site/logs/error.log</span><br><span class="line">    CustomLog /site/access.log combine</span><br><span class="line"></span><br><span class="line">    alias /<span class="keyword">static</span> /blog_project/<span class="keyword">static</span></span><br><span class="line">    &lt;Directory /blog_project/<span class="keyword">static</span>&gt;</span><br><span class="line">        Require all granted</span><br><span class="line">    &lt;/Directory&gt;</span><br><span class="line"></span><br><span class="line">    &lt;Directory /blog_project/blog_project&gt;</span><br><span class="line">        &lt;Files wsgi.py&gt;</span><br><span class="line">            Require all granted</span><br><span class="line">        &lt;/Files&gt;</span><br><span class="line">    &lt;/Directory&gt;</span><br><span class="line"></span><br><span class="line">    WSGIDaemonProcess blog_project python-path=<span class="regexp">/blog_project python-home=/</span>blog_project/venv</span><br><span class="line">    WSGIProcessGroup blog_project</span><br><span class="line">    WSGIScriptAlias / <span class="regexp">/blog_project/</span>blog_project/wsgi.py</span><br><span class="line"></span><br><span class="line">&lt;/VirtualHost&gt;</span><br></pre></td></tr></table></figure>
+<p>解决图片上传有中文问题：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;etc&#x2F;apache2&#x2F;envvars</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="built_in">export</span> LANG=<span class="string">&#x27;zh_CN.UTF-8&#x27;</span></span><br><span class="line"><span class="built_in">export</span> LC_ALL=<span class="string">&#x27;zh_CN.UTF-8&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">export</span> LANG=<span class="string">&#x27;en_US.UTF-8&#x27;</span></span><br><span class="line"><span class="built_in">export</span> LC_ALL=<span class="string">&#x27;en_US.UTF-8&#x27;</span></span><br></pre></td></tr></table></figure>
+
+        </div>
+
+        <div class="article-nav">
+            
+                <div class="article-prev">
+                    <a class="prev btn"
+                       rel="prev"
+                       href="/2020/08/05/%E7%AE%97%E6%B3%95/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%95/%E7%AE%97%E6%B3%95%20-%20%E4%BA%8C%E5%88%86%E6%B3%95/"
+                    >
+                        <i class="fa fa-chevron-left"></i> <span class="post-nav-title-item">算法 - 二分法</span><span class="post-nav-item">Prev posts</span>
+                    </a>
+                </div>
+            
+            
+                <div class="article-next">
+                    <a class="next btn"
+                       rel="next"
+                       href="/2020/08/03/Django/Django%20-%20ORM%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/"
+                    >
+                        <span class="post-nav-title-item">Django - ORM常用操作</span><span class="post-nav-item">Next posts</span> <i class="fa fa-chevron-right"></i>
+                    </a>
+                </div>
+            
+        </div>
+
+        <div class="comment-container">
+            <div class="comments-container">
+    
+</div>
+        </div>
+    </div>
+</div>
+
+    <div class="article-toc-container fade-in-down-animation">
+        <div class="article-toc">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9C%A8%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%93%8D%E4%BD%9C%E5%A6%82%E4%B8%8B%EF%BC%9A"><span class="nav-number">1.</span> <span class="nav-text">在服务器操作如下：</span></a></li></ol>
+    </div>
+</div>
+        </div>
+    </div>
+
+
+                
+
+            </div>
+
+            
+
+        </main>
+
+        <div class="sidebar-tools">
+            <div class="tools-container">
+    <ul class="tools-list">
+        
+            <li class="search popup-trigger">
+                <i class="fa fa-search"></i>
+            </li>
+            
+<script src="/js/local-search.js"></script>
+
+        
+        <li class="mode-toggle">
+            <i class="fa fa-moon-o"></i>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+
+        
+            <div class="scroll-to-top">
+                <ul>
+                    <li>
+                        <!--<i class="fa fa-caret-up"></i>-->
+                        <span class="scroll-percent"></span>
+                    </li>
+                </ul>
+            </div>
+        
+    </div>
+
+    <div class="page-bottom">
+        <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy; 2020 <a href="/">ILS</a>
+        </div>
+
+
+        <a href="http://www.beian.miit.gov.cn/"  target="_blank">蜀ICP备20024492号</a>
+
+
+
+
+        
+    </div>
+</footer>
+
+    </div>
+</div>
+
+    <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-icon">
+            <i class="fa fa-search"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/js/main.js"></script>
+<script src="/js/header-shrink.js"></script>
+<script src="/js/toggle-mode.js"></script>
+
+
+
+    
+<script src="/js/scroll-to-top.js"></script>
+
+
+
+
+
+    
+        
+<script src="/js/code-copy.js"></script>
+
+    
+
+    
+        
+<script src="/lib/anime.min.js"></script>
+<script src="/js/toc.js"></script>
+
+    
+
+
+
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<!-- <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</body>
+</html>

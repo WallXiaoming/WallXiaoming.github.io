@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    
+    <title>
+        Django - views配置 | Mao
+    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+        <link rel="shortcut icon" href="/images/favicon.jpg">
+    
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <script id="hexo-configurations">
+    let CONFIG = {"hostname":"wallxiaoming.github.io","root":"/","localsearch":{"enable":true,"trigger":"auto","unescape":false,"preload":false},"themeInfo":{"name":"ILS","version":"1.1.2","author":"XPoet","repository":"https://github.com/XPoet/hexo-theme-ils"},"path":"search.xml"};
+  </script>
+<meta name="generator" content="Hexo 5.0.0"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+
+
+<body>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="page-template">
+    <div class="page-top">
+        <header class="header-wrapper">
+
+    <div class="header-progress"></div>
+
+    <div class="header-content">
+
+        <a class="logo-title" href="/">
+            Mao
+        </a>
+
+        <ul class="menu-list">
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/"
+                    >
+                        HOME
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/archives"
+                    >
+                        ARCHIVES
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/about"
+                    >
+                        ABOUT
+                    </a>
+                </li>
+            
+        </ul>
+
+        <div class="menu-bar">
+            <div class="menu-bar-middle"></div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item">
+                    <a class=""
+                       href="/">HOME</a>
+                </li>
+            
+                <li class="drawer-menu-item">
+                    <a class=""
+                       href="/archives">ARCHIVES</a>
+                </li>
+            
+                <li class="drawer-menu-item">
+                    <a class=""
+                       href="/about">ABOUT</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+    </div>
+
+    <div class="page-middle ">
+
+        <main class="main-content normal-code-theme">
+
+            <div class="main-content-left">
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <h3><a class="title-hover-animation">Django - views配置</a></h3>
+        </div>
+
+        <div class="meta-info">
+            <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa fa-calendar-o"></i> 2020-08-03 15:07:32
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa fa-folder"></i>
+            <ul>
+                
+                    <li>
+                        <a href="/categories/Django/">Django</a>
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa fa-tags"></i>
+            <ul>
+                
+                    <li>
+                        <a href="/tags/django/">django</a>
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+</div>
+        </div>
+
+        <div class="article-content markdown-body">
+            <hr>
+<p>views.py是业务的请求和处理文件。</p>
+<p><img src="https://blogmypic.oss-cn-beijing.aliyuncs.com/img/20200811072935.png" alt=""></p>
+<p>在views模块中，request参数是一个HttpRequest的一个请求。可以使用isinstance()函数查看是否为request是否为HttpRequest的一个子类</p>
+<h4 id="Request对象">Request对象</h4>
+<p><img src="https://blogmypic.oss-cn-beijing.aliyuncs.com/img/20200811072949.png" alt=""></p>
+<p>结果为True。</p>
+<p><img src="https://blogmypic.oss-cn-beijing.aliyuncs.com/img/20200811073005.png" alt=""></p>
+<p>详情见官方文档：<a target="_blank" rel="noopener" href="https://docs.djangoproject.com/en/3.0/ref/request-response/">https://docs.djangoproject.com/en/3.0/ref/request-response/</a></p>
+<p>常见的HttpRequst请求：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left"></th>
+<th style="text-align:left"></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">path</td>
+<td style="text-align:left">Request请求的路径</td>
+</tr>
+<tr>
+<td style="text-align:left">method</td>
+<td style="text-align:left">Request请求的方法</td>
+</tr>
+<tr>
+<td style="text-align:left">GET</td>
+<td style="text-align:left">包含所有给定HTTP GET参数的类字典对象</td>
+</tr>
+<tr>
+<td style="text-align:left">POST</td>
+<td style="text-align:left">包含所有给定HTTP POST参数的类字典对象</td>
+</tr>
+<tr>
+<td style="text-align:left">COOKIES</td>
+<td style="text-align:left">包含所有cookie的字典。键和值是字符串。</td>
+</tr>
+<tr>
+<td style="text-align:left">user</td>
+<td style="text-align:left">用户的验证</td>
+</tr>
+</tbody>
+</table>
+<p>GET是在游览器地址中进行传递。POST不会在游览器中传递，但是，对应的GET和POST方法都是一个<code>QueryDict objects  </code></p>
+<p>比如在游览器器的地址中输入 ?name=12345</p>
+<p>在对应的request中，GET为一个字典序列，所以可以通过字典方式输出name的具体值。</p>
+<p><img src="https://blogmypic.oss-cn-beijing.aliyuncs.com/img/20200811073023.png" alt=""></p>
+<p><img src="https://blogmypic.oss-cn-beijing.aliyuncs.com/img/20200811073033.png" alt=""></p>
+<p><img src="https://blogmypic.oss-cn-beijing.aliyuncs.com/img/20200811073042.png" alt=""></p>
+<p>够着一个POST表单：</p>
+<p><img src="https://blogmypic.oss-cn-beijing.aliyuncs.com/img/20200811073057.png" alt=""></p>
+<p>输出POST结果就是</p>
+<p><img src="https://blogmypic.oss-cn-beijing.aliyuncs.com/img/20200811073113.png" alt=""></p>
+<p>get是url游览器地址提交，post不会出现在游览器中。这里get提交name=”123“ ，key是name， post提交，name=”key“，这里的值是”key“</p>
+<h4 id="Response对象">Response对象</h4>
+<p>可以直接使用HttpResponse进行一个直接的内容返回。</p>
+<p><img src="https://blogmypic.oss-cn-beijing.aliyuncs.com/img/20200811073125.png" alt=""></p>
+<p><img src="https://blogmypic.oss-cn-beijing.aliyuncs.com/img/20200811073134.png" alt=""></p>
+<p>这里的render函数就是一个HttpResponse的一个子类的方法实现。</p>
+<p><img src="https://blogmypic.oss-cn-beijing.aliyuncs.com/img/20200811073144.png" alt=""></p>
+<p>render第一个为Request请求，第二个为渲染的模板，第三个为content内容，用于<code>模板标签</code>的使用。</p>
+<p>在render传入content内容的时候，可以使用locals的方法</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span>(<span class="params">request</span>):</span></span><br><span class="line">    <span class="keyword">return</span> render(request, <span class="string">&quot;blog/index.html&quot;</span>, local())</span><br></pre></td></tr></table></figure>
+<p>此外还有一个方法，redirect,也是一个HttpResponse的实现，是直接进行网页的跳转。</p>
+<p>这样就会直接跳转到百度。</p>
+<p>同理，也可以直接跳转到本地设置的路径。</p>
+<p><img src="https://blogmypic.oss-cn-beijing.aliyuncs.com/img/20200811073153.png" alt=""></p>
+<p>但是不能跳转到当前路径，不然就会进行死循环跳转。</p>
+
+        </div>
+
+        <div class="article-nav">
+            
+                <div class="article-prev">
+                    <a class="prev btn"
+                       rel="prev"
+                       href="/2020/08/03/Django/Django%20-%20urls%E9%85%8D%E7%BD%AE/"
+                    >
+                        <i class="fa fa-chevron-left"></i> <span class="post-nav-title-item">Django - URLS配置</span><span class="post-nav-item">Prev posts</span>
+                    </a>
+                </div>
+            
+            
+                <div class="article-next">
+                    <a class="next btn"
+                       rel="next"
+                       href="/2020/08/03/Django/Django%20-%20%E5%88%86%E9%A1%B5%E5%99%A8%E4%B8%8E%E6%90%9C%E7%B4%A2/"
+                    >
+                        <span class="post-nav-title-item">Django - 搜索与分页器</span><span class="post-nav-item">Next posts</span> <i class="fa fa-chevron-right"></i>
+                    </a>
+                </div>
+            
+        </div>
+
+        <div class="comment-container">
+            <div class="comments-container">
+    
+</div>
+        </div>
+    </div>
+</div>
+
+    <div class="article-toc-container fade-in-down-animation">
+        <div class="article-toc">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Request%E5%AF%B9%E8%B1%A1"><span class="nav-number">1.</span> <span class="nav-text">Request对象</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Response%E5%AF%B9%E8%B1%A1"><span class="nav-number">2.</span> <span class="nav-text">Response对象</span></a></li></ol>
+    </div>
+</div>
+        </div>
+    </div>
+
+
+                
+
+            </div>
+
+            
+
+        </main>
+
+        <div class="sidebar-tools">
+            <div class="tools-container">
+    <ul class="tools-list">
+        
+            <li class="search popup-trigger">
+                <i class="fa fa-search"></i>
+            </li>
+            
+<script src="/js/local-search.js"></script>
+
+        
+        <li class="mode-toggle">
+            <i class="fa fa-moon-o"></i>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+
+        
+            <div class="scroll-to-top">
+                <ul>
+                    <li>
+                        <!--<i class="fa fa-caret-up"></i>-->
+                        <span class="scroll-percent"></span>
+                    </li>
+                </ul>
+            </div>
+        
+    </div>
+
+    <div class="page-bottom">
+        <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy; 2020 <a href="/">ILS</a>
+        </div>
+
+
+        <a href="http://www.beian.miit.gov.cn/"  target="_blank">蜀ICP备20024492号</a>
+
+
+
+
+        
+    </div>
+</footer>
+
+    </div>
+</div>
+
+    <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-icon">
+            <i class="fa fa-search"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/js/main.js"></script>
+<script src="/js/header-shrink.js"></script>
+<script src="/js/toggle-mode.js"></script>
+
+
+
+    
+<script src="/js/scroll-to-top.js"></script>
+
+
+
+
+
+    
+        
+<script src="/js/code-copy.js"></script>
+
+    
+
+    
+        
+<script src="/lib/anime.min.js"></script>
+<script src="/js/toc.js"></script>
+
+    
+
+
+
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<!-- <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</body>
+</html>

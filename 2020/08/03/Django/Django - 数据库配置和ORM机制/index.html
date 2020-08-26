@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    
+    <title>
+        Django - 数据库配置和ORM机制 | Mao
+    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+        <link rel="shortcut icon" href="/images/favicon.jpg">
+    
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <script id="hexo-configurations">
+    let CONFIG = {"hostname":"wallxiaoming.github.io","root":"/","localsearch":{"enable":true,"trigger":"auto","unescape":false,"preload":false},"themeInfo":{"name":"ILS","version":"1.1.2","author":"XPoet","repository":"https://github.com/XPoet/hexo-theme-ils"},"path":"search.xml"};
+  </script>
+<meta name="generator" content="Hexo 5.0.0"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+
+
+<body>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="page-template">
+    <div class="page-top">
+        <header class="header-wrapper">
+
+    <div class="header-progress"></div>
+
+    <div class="header-content">
+
+        <a class="logo-title" href="/">
+            Mao
+        </a>
+
+        <ul class="menu-list">
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/"
+                    >
+                        HOME
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/archives"
+                    >
+                        ARCHIVES
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/about"
+                    >
+                        ABOUT
+                    </a>
+                </li>
+            
+        </ul>
+
+        <div class="menu-bar">
+            <div class="menu-bar-middle"></div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item">
+                    <a class=""
+                       href="/">HOME</a>
+                </li>
+            
+                <li class="drawer-menu-item">
+                    <a class=""
+                       href="/archives">ARCHIVES</a>
+                </li>
+            
+                <li class="drawer-menu-item">
+                    <a class=""
+                       href="/about">ABOUT</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+    </div>
+
+    <div class="page-middle ">
+
+        <main class="main-content normal-code-theme">
+
+            <div class="main-content-left">
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <h3><a class="title-hover-animation">Django - 数据库配置和ORM机制</a></h3>
+        </div>
+
+        <div class="meta-info">
+            <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa fa-calendar-o"></i> 2020-08-03 15:07:32
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa fa-folder"></i>
+            <ul>
+                
+                    <li>
+                        <a href="/categories/Django/">Django</a>
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa fa-tags"></i>
+            <ul>
+                
+                    <li>
+                        <a href="/tags/django/">django</a>
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+</div>
+        </div>
+
+        <div class="article-content markdown-body">
+            <p>首先在setting里面会配置好数据库的信息：这里默认的是使用sqlite3的数据库</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">DATABASES = &#123;</span><br><span class="line">    <span class="string">&#x27;default&#x27;</span>: &#123;</span><br><span class="line">        <span class="string">&#x27;ENGINE&#x27;</span>: <span class="string">&#x27;django.db.backends.sqlite3&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;NAME&#x27;</span>: os.path.join(BASE_DIR, <span class="string">&#x27;db.sqlite3&#x27;</span>),</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Python支持这些引擎，详情见： <a target="_blank" rel="noopener" href="https://docs.djangoproject.com/en/3.0/ref/settings/#databases">https://docs.djangoproject.com/en/3.0/ref/settings/#databases</a></p>
+<ul>
+<li>‘django.db.backends.postgresql’</li>
+<li>‘django.db.backends.mysql’</li>
+<li>‘django.db.backends.sqlite3’</li>
+<li>‘django.db.backends.oracle’</li>
+</ul>
+<h4 id="切换成MySQL数据库">切换成MySQL数据库</h4>
+<p>首先需要安装MySQL的python驱动库。这里使用mysqlclient</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install mysqlclient</span><br></pre></td></tr></table></figure>
+<p>然后需要在setting里面更改数据库引擎和配置。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">DATABASES = &#123;</span><br><span class="line">    <span class="string">&#x27;default&#x27;</span>: &#123;</span><br><span class="line">        <span class="string">&#x27;ENGINE&#x27;</span>: <span class="string">&#x27;django.db.backends.mysql&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;NAME&#x27;</span>: <span class="string">&#x27;blog_project&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;USER&#x27;</span>: <span class="string">&#x27;root&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;PASSWORD&#x27;</span>: <span class="string">&#x27;demo9090&#x27;</span>,</span><br><span class="line">        <span class="comment">#  这里可选配置</span></span><br><span class="line">        <span class="comment"># &#x27;HOST&#x27;: &#x27;127.0.0.1&#x27;,</span></span><br><span class="line">        <span class="comment"># &#x27;PORT&#x27;: &#x27;5432&#x27;,</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后利用Navicat连接数据库，之后创建数据库。<br>
+<img src="https://blogmypic.oss-cn-beijing.aliyuncs.com/img/20200803150514.png" alt=""></p>
+<p>接下来进行表单同步：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">python manage.py makemigrations</span><br><span class="line">python manage.py migrate</span><br></pre></td></tr></table></figure>
+<p>同步表单后就可以看到表单数据了。</p>
+<p><img src="https://blogmypic.oss-cn-beijing.aliyuncs.com/img/20200803150525.png" alt=""></p>
+<h4 id="ORM机制">ORM机制</h4>
+<p><img src="https://blogmypic.oss-cn-beijing.aliyuncs.com/img/20200803150552.png" alt=""></p>
+<p>对象关系映射(英语:Object Relational Mapping,简称ORM)，用于实现面向对象编程语言里不同类型系统的数据之间的转换.换句说，就是用面向对象的方式去操作数据库的创建表，增加、修改、删除、查询等操作</p>
+<p>比如： 可以在QuerySet中调用query属性</p>
+<p>在<code>views.py</code>中：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span>(<span class="params">request</span>):</span></span><br><span class="line">    user_list = User.Objects.all()</span><br><span class="line">    print(user_list.query)</span><br><span class="line">    <span class="keyword">return</span> render(request, <span class="string">&quot;blog/index.html&quot;</span>, &#123;<span class="string">&quot;user&quot;</span>: user_list&#125;)</span><br></pre></td></tr></table></figure>
+<p>这样会得到一套sql语句，然后再Navicat中查询一下query(询问)</p>
+<p><img src="https://blogmypic.oss-cn-beijing.aliyuncs.com/img/20200803150607.png" alt=""></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="string">`auth_user`</span>.<span class="string">`id`</span>, <span class="string">`auth_user`</span>.<span class="string">`password`</span>, <span class="string">`auth_user`</span>.<span class="string">`last_login`</span>, <span class="string">`auth_user`</span>.<span class="string">`is_superuser`</span>, <span class="string">`auth_user`</span>.<span class="string">`username`</span>, <span class="string">`auth_user`</span>.<span class="string">`first_name`</span>, <span class="string">`auth_user`</span>.<span class="string">`last_name`</span>, <span class="string">`auth_user`</span>.<span class="string">`email`</span>, <span class="string">`auth_user`</span>.<span class="string">`is_staff`</span>, <span class="string">`auth_user`</span>.<span class="string">`is_active`</span>, <span class="string">`auth_user`</span>.<span class="string">`date_joined`</span> <span class="keyword">FROM</span> <span class="string">`auth_user`</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>查询结果</p>
+<p><img src="https://blogmypic.oss-cn-beijing.aliyuncs.com/img/20200803150626.png" alt=""></p>
+<p>ORM优缺点</p>
+<ol>
+<li>
+<p>ORM使得我们通过数据库交互变的简单易行，并且完全不用考虑该死的SQL语句，快速开发，由此而来</p>
+</li>
+<li>
+<p>可以避免一些你搜程序猿写sql语句带来的性能和效率问题</p>
+</li>
+</ol>
+<p>缺点：</p>
+<ol>
+<li>
+<p>性能有所牺牲。不过现在的各种ORM框架都在尝试使用各种方法来减轻这个问题(LazyLoad，Cache)，效果还是很显著的</p>
+</li>
+<li>
+<p>对于个别复杂查询，ORM仍然力不从心。为了 解决这个问题，ORM框架一般也提供了直接原生sql的方式</p>
+</li>
+</ol>
+
+        </div>
+
+        <div class="article-nav">
+            
+                <div class="article-prev">
+                    <a class="prev btn"
+                       rel="prev"
+                       href="/2020/08/03/Django/Django%20-%20%E5%88%9B%E5%BB%BA%E7%AC%AC%E4%B8%80%E4%B8%AA%E7%BD%91%E9%A1%B5/"
+                    >
+                        <i class="fa fa-chevron-left"></i> <span class="post-nav-title-item">Django - 创建第一个网页</span><span class="post-nav-item">Prev posts</span>
+                    </a>
+                </div>
+            
+            
+                <div class="article-next">
+                    <a class="next btn"
+                       rel="next"
+                       href="/2020/08/03/Django/Django%20-%20%E8%99%9A%E6%8B%9F%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/"
+                    >
+                        <span class="post-nav-title-item">Django - 虚拟环境配置</span><span class="post-nav-item">Next posts</span> <i class="fa fa-chevron-right"></i>
+                    </a>
+                </div>
+            
+        </div>
+
+        <div class="comment-container">
+            <div class="comments-container">
+    
+</div>
+        </div>
+    </div>
+</div>
+
+    <div class="article-toc-container fade-in-down-animation">
+        <div class="article-toc">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%87%E6%8D%A2%E6%88%90MySQL%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">1.</span> <span class="nav-text">切换成MySQL数据库</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ORM%E6%9C%BA%E5%88%B6"><span class="nav-number">2.</span> <span class="nav-text">ORM机制</span></a></li></ol>
+    </div>
+</div>
+        </div>
+    </div>
+
+
+                
+
+            </div>
+
+            
+
+        </main>
+
+        <div class="sidebar-tools">
+            <div class="tools-container">
+    <ul class="tools-list">
+        
+            <li class="search popup-trigger">
+                <i class="fa fa-search"></i>
+            </li>
+            
+<script src="/js/local-search.js"></script>
+
+        
+        <li class="mode-toggle">
+            <i class="fa fa-moon-o"></i>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+
+        
+            <div class="scroll-to-top">
+                <ul>
+                    <li>
+                        <!--<i class="fa fa-caret-up"></i>-->
+                        <span class="scroll-percent"></span>
+                    </li>
+                </ul>
+            </div>
+        
+    </div>
+
+    <div class="page-bottom">
+        <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy; 2020 <a href="/">ILS</a>
+        </div>
+
+
+        <a href="http://www.beian.miit.gov.cn/"  target="_blank">蜀ICP备20024492号</a>
+
+
+
+
+        
+    </div>
+</footer>
+
+    </div>
+</div>
+
+    <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-icon">
+            <i class="fa fa-search"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/js/main.js"></script>
+<script src="/js/header-shrink.js"></script>
+<script src="/js/toggle-mode.js"></script>
+
+
+
+    
+<script src="/js/scroll-to-top.js"></script>
+
+
+
+
+
+    
+        
+<script src="/js/code-copy.js"></script>
+
+    
+
+    
+        
+<script src="/lib/anime.min.js"></script>
+<script src="/js/toc.js"></script>
+
+    
+
+
+
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<!-- <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</body>
+</html>

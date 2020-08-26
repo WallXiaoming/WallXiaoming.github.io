@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    
+    <title>
+        Django - ORM常用操作 | Mao
+    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+        <link rel="shortcut icon" href="/images/favicon.jpg">
+    
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <script id="hexo-configurations">
+    let CONFIG = {"hostname":"wallxiaoming.github.io","root":"/","localsearch":{"enable":true,"trigger":"auto","unescape":false,"preload":false},"themeInfo":{"name":"ILS","version":"1.1.2","author":"XPoet","repository":"https://github.com/XPoet/hexo-theme-ils"},"path":"search.xml"};
+  </script>
+<meta name="generator" content="Hexo 5.0.0"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+
+
+<body>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="page-template">
+    <div class="page-top">
+        <header class="header-wrapper">
+
+    <div class="header-progress"></div>
+
+    <div class="header-content">
+
+        <a class="logo-title" href="/">
+            Mao
+        </a>
+
+        <ul class="menu-list">
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/"
+                    >
+                        HOME
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/archives"
+                    >
+                        ARCHIVES
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/about"
+                    >
+                        ABOUT
+                    </a>
+                </li>
+            
+        </ul>
+
+        <div class="menu-bar">
+            <div class="menu-bar-middle"></div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item">
+                    <a class=""
+                       href="/">HOME</a>
+                </li>
+            
+                <li class="drawer-menu-item">
+                    <a class=""
+                       href="/archives">ARCHIVES</a>
+                </li>
+            
+                <li class="drawer-menu-item">
+                    <a class=""
+                       href="/about">ABOUT</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+    </div>
+
+    <div class="page-middle ">
+
+        <main class="main-content normal-code-theme">
+
+            <div class="main-content-left">
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <h3><a class="title-hover-animation">Django - ORM常用操作</a></h3>
+        </div>
+
+        <div class="meta-info">
+            <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa fa-calendar-o"></i> 2020-08-03 15:07:32
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa fa-folder"></i>
+            <ul>
+                
+                    <li>
+                        <a href="/categories/Django/">Django</a>
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa fa-tags"></i>
+            <ul>
+                
+                    <li>
+                        <a href="/tags/django/">django</a>
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+</div>
+        </div>
+
+        <div class="article-content markdown-body">
+            <hr>
+<p>objects:为models默认管理器， 在插入的时候可以使用id也可以使用对象， 这里返回的是一个object</p>
+<p>详情: <a target="_blank" rel="noopener" href="https://docs.djangoproject.com/zh-hans/3.0/topics/db/queries/">https://docs.djangoproject.com/zh-hans/3.0/topics/db/queries/</a></p>
+<p>插入<code>多对多关系</code>的时候需要分布操作</p>
+<p>一、 增加crate 和 save方法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 利用create创建</span></span><br><span class="line">Author.object.cerate(name=<span class="string">&quot;李四&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 利用save方法创建</span></span><br><span class="line">xiaoming = Author(name=<span class="string">&quot;小明&quot;</span>)</span><br><span class="line">xiaoming.save()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 在创建主键关系的时候，比如OneToOneField, ManyTOManyField, ForeignKey, 在author绑定的时候使用author_id绑定</span></span><br><span class="line">xiaoming_detail = AuthorDetail(sex=<span class="string">&quot;0&quot;</span>, email=<span class="string">&quot;xiaoming@email.com&quot;</span>, address=<span class="string">&quot;北京xxxx&quot;</span>, brithday=<span class="string">&quot;1900-8-8&quot;</span>, author_id=<span class="string">&quot;3&quot;</span>)</span><br><span class="line">xiaoming_detail.save()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 增加一条出版社信息</span></span><br><span class="line">pub = Publisher()</span><br><span class="line">pub.name = <span class="string">&quot;成都工业&quot;</span></span><br><span class="line">pub.address = <span class="string">&quot;成都xxx&quot;</span></span><br><span class="line">pub.city = <span class="string">&quot;成都&quot;</span></span><br><span class="line">pub.state_province = <span class="string">&quot;四川&quot;</span></span><br><span class="line">pub.country = <span class="string">&quot;中国&quot;</span></span><br><span class="line">pub.website = <span class="string">&quot;www.google.com&quot;</span></span><br><span class="line">pub.save()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 增加书籍信息，多对多是两张表，author和数据对应的是一张表</span></span><br><span class="line">book = Book(title=<span class="string">&quot;这是一本书&quot;</span>, publisher=pub, publication_date=<span class="string">&quot;2017-8-9&quot;</span>)</span><br><span class="line"><span class="comment"># 所以这需要先保存</span></span><br><span class="line">book.save()</span><br><span class="line">book.author.add(xiaoming)</span><br><span class="line">li = Author.objects.get(id=<span class="number">2</span>)</span><br><span class="line">book.author.add(li)</span><br></pre></td></tr></table></figure>
+<p>然后就会在表格中多一个。</p>
+<p><img src="https://blogmypic.oss-cn-beijing.aliyuncs.com/img/20200811072449.png" alt=""></p>
+<p>二、 修改update 和 save方法</p>
+<p>注意update修改于<code>QuerySet</code>, <code>get</code>获取的是<code>object</code>对象，<code>filter</code> 获取的是<code>QuerySet</code></p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 利用 save方法修改</span></span><br><span class="line">li = Author.objects.get(id=<span class="number">2</span>)</span><br><span class="line">li.name = <span class="string">&quot;最强王者&quot;</span></span><br><span class="line">li.save()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 利用 update方法修改, QuerySet</span></span><br><span class="line">b = Publisher.objects.filter(id=<span class="number">1</span>)</span><br><span class="line">b.update(website=<span class="string">&quot;http://www.baidu.com&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p>三、 查询(惰性查询)和删除</p>
+<ol>
+<li>
+<p>QuerySet 是惰性的 —— 创建 QuerySet 并不会引发任何数据库活动。你可以将一整天的过滤器都堆积在一起，Django 只会在 QuerySet 被 计算 时执行查询操作。在使用xxx.objects.all()的时候，并没有直接去数据库查询，但是，如果使用就会进行数据库的实际查询。</p>
+</li>
+<li>
+<p>delete删除, QuerySet和object都行</p>
+</li>
+</ol>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 删除是级联删除，on_delete=models.CASCADE, 删除了张三，那么authorDetail里面的张三也会被删除</span></span><br><span class="line">Author.objects.filter(id=<span class="number">1</span>).delete()</span><br><span class="line">Author.objects.get(id=<span class="number">2</span>).delete()</span><br></pre></td></tr></table></figure>
+<p>查询方法有： <a target="_blank" rel="noopener" href="https://docs.djangoproject.com/zh-hans/3.0/topics/db/queries/">https://docs.djangoproject.com/zh-hans/3.0/topics/db/queries/</a></p>
+<p>QuerySet不支负数索引</p>
+<ul>
+<li>get()</li>
+<li>filter()</li>
+<li>first()</li>
+<li>last()</li>
+<li>all()</li>
+<li>count()</li>
+</ul>
+
+        </div>
+
+        <div class="article-nav">
+            
+                <div class="article-prev">
+                    <a class="prev btn"
+                       rel="prev"
+                       href="/2020/08/03/Django/Django%20-%20%E9%83%A8%E7%BD%B2%E5%88%B0Linux%E6%9C%8D%E5%8A%A1%E5%99%A8/"
+                    >
+                        <i class="fa fa-chevron-left"></i> <span class="post-nav-title-item">Django - 部署到Linux服务器</span><span class="post-nav-item">Prev posts</span>
+                    </a>
+                </div>
+            
+            
+                <div class="article-next">
+                    <a class="next btn"
+                       rel="next"
+                       href="/2020/08/03/Django/Django%20-%20ORM%E6%9F%A5%E8%AF%A2/"
+                    >
+                        <span class="post-nav-title-item">Django - ORM查询</span><span class="post-nav-item">Next posts</span> <i class="fa fa-chevron-right"></i>
+                    </a>
+                </div>
+            
+        </div>
+
+        <div class="comment-container">
+            <div class="comments-container">
+    
+</div>
+        </div>
+    </div>
+</div>
+
+    <div class="article-toc-container fade-in-down-animation">
+        <div class="article-toc">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        
+    </div>
+</div>
+        </div>
+    </div>
+
+
+                
+
+            </div>
+
+            
+
+        </main>
+
+        <div class="sidebar-tools">
+            <div class="tools-container">
+    <ul class="tools-list">
+        
+            <li class="search popup-trigger">
+                <i class="fa fa-search"></i>
+            </li>
+            
+<script src="/js/local-search.js"></script>
+
+        
+        <li class="mode-toggle">
+            <i class="fa fa-moon-o"></i>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+
+        
+            <div class="scroll-to-top">
+                <ul>
+                    <li>
+                        <!--<i class="fa fa-caret-up"></i>-->
+                        <span class="scroll-percent"></span>
+                    </li>
+                </ul>
+            </div>
+        
+    </div>
+
+    <div class="page-bottom">
+        <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy; 2020 <a href="/">ILS</a>
+        </div>
+
+
+        <a href="http://www.beian.miit.gov.cn/"  target="_blank">蜀ICP备20024492号</a>
+
+
+
+
+        
+    </div>
+</footer>
+
+    </div>
+</div>
+
+    <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-icon">
+            <i class="fa fa-search"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/js/main.js"></script>
+<script src="/js/header-shrink.js"></script>
+<script src="/js/toggle-mode.js"></script>
+
+
+
+    
+<script src="/js/scroll-to-top.js"></script>
+
+
+
+
+
+    
+        
+<script src="/js/code-copy.js"></script>
+
+    
+
+    
+        
+<script src="/lib/anime.min.js"></script>
+<script src="/js/toc.js"></script>
+
+    
+
+
+
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<!-- <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</body>
+</html>

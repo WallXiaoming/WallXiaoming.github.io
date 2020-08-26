@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    
+    <title>
+        Django - ORM查询 | Mao
+    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+        <link rel="shortcut icon" href="/images/favicon.jpg">
+    
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <script id="hexo-configurations">
+    let CONFIG = {"hostname":"wallxiaoming.github.io","root":"/","localsearch":{"enable":true,"trigger":"auto","unescape":false,"preload":false},"themeInfo":{"name":"ILS","version":"1.1.2","author":"XPoet","repository":"https://github.com/XPoet/hexo-theme-ils"},"path":"search.xml"};
+  </script>
+<meta name="generator" content="Hexo 5.0.0"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+
+
+<body>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="page-template">
+    <div class="page-top">
+        <header class="header-wrapper">
+
+    <div class="header-progress"></div>
+
+    <div class="header-content">
+
+        <a class="logo-title" href="/">
+            Mao
+        </a>
+
+        <ul class="menu-list">
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/"
+                    >
+                        HOME
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/archives"
+                    >
+                        ARCHIVES
+                    </a>
+                </li>
+            
+                <li class="menu-item">
+                    <a class=""
+                       href="/about"
+                    >
+                        ABOUT
+                    </a>
+                </li>
+            
+        </ul>
+
+        <div class="menu-bar">
+            <div class="menu-bar-middle"></div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item">
+                    <a class=""
+                       href="/">HOME</a>
+                </li>
+            
+                <li class="drawer-menu-item">
+                    <a class=""
+                       href="/archives">ARCHIVES</a>
+                </li>
+            
+                <li class="drawer-menu-item">
+                    <a class=""
+                       href="/about">ABOUT</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+    </div>
+
+    <div class="page-middle ">
+
+        <main class="main-content normal-code-theme">
+
+            <div class="main-content-left">
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <h3><a class="title-hover-animation">Django - ORM查询</a></h3>
+        </div>
+
+        <div class="meta-info">
+            <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa fa-calendar-o"></i> 2020-08-03 15:07:32
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa fa-folder"></i>
+            <ul>
+                
+                    <li>
+                        <a href="/categories/Django/">Django</a>
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa fa-tags"></i>
+            <ul>
+                
+                    <li>
+                        <a href="/tags/django/">django</a>
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+</div>
+        </div>
+
+        <div class="article-content markdown-body">
+            <hr>
+<p>详情：</p>
+<p><a target="_blank" rel="noopener" href="https://docs.djangoproject.com/en/3.0/ref/models/querysets/">https://docs.djangoproject.com/en/3.0/ref/models/querysets/</a><br>
+<a target="_blank" rel="noopener" href="https://docs.djangoproject.com/zh-hans/3.0/topics/db/queries/">https://docs.djangoproject.com/zh-hans/3.0/topics/db/queries/</a></p>
+<p>查询的对象有两种一种是直接查询项目object， 一种是查询QuerySet。</p>
+<p>QuerySet特点：</p>
+<ol>
+<li>惰性查询</li>
+<li>可迭代</li>
+<li>可切片</li>
+<li>可索性，但是索引不能为负数</li>
+</ol>
+<p>常见查询：</p>
+<ul>
+<li><code>get(**kwargs)</code> 返回object， 事实具体查询，如果查出多个object或者没有查到都会报错，可以用异常捕捉进行调试</li>
+<li><code>all()</code>  查询所有结果</li>
+<li><code>filter(**kwargs)</code>返回QuerySet， 条件查询</li>
+<li><code>exclude(**kwargs)</code> 与filter相反，返回条件不同的结果</li>
+<li><code>order_by(*fileds)</code> 对查询结果排序</li>
+<li><code>reverse()</code> 对查询结果反向排列</li>
+<li><code>distinct()</code> 返回结果中剔除重复记录</li>
+<li><code>values(*fileds)</code> 返回一个valueQuerySet, 内容以为字典的形式</li>
+<li><code>values_list(*fileds)</code> 返回alueQuerySet， 内容以元组的形式</li>
+<li><code>count()</code>返回QuerySet中查询匹配的数目</li>
+<li><code>first()</code>返回第一条记录，等价于[:1][0]</li>
+<li><code>last()</code>返回最后一条记录， 等价于[::-1][0]</li>
+<li><code>exists()</code> 如果QuerySet中有数据返回True， 否则返回False</li>
+</ul>
+<p>多表查询：</p>
+<ul>
+<li>__xx, 可以使用__xxx使用双下划线对属性进行直接显示, 可用内连接与外连接。</li>
+<li>_set, 提供某一个对象访问set的数据表，是主键类关联外键类型。ForeignKey. 主键就是多对1的那个1, 外键就是那个多。</li>
+</ul>
+<p>聚集查询和分组查询：</p>
+<ol>
+<li><code>annotate(*args, **kwargs)</code>, 以QuerySet集合对象添加注释， 通过集合中每个关联对象集合。用于分组查询</li>
+<li><code>aggregate(*args, **kwargs)</code>, 返回一个聚合值的字典。</li>
+</ol>
+<p>聚集查询和分组查询都在<code>from django.db.models import Count</code>中</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> django.db.models <span class="keyword">import</span> Sum</span><br><span class="line"></span><br><span class="line"><span class="comment"># 对于所有书的价格求和</span></span><br><span class="line">Book.objects.aggregate(Sum(<span class="string">&#x27;prices&#x27;</span>))</span><br><span class="line"><span class="comment"># 或者使用kwargs， key就是显示的key， values = Sum(&quot;prices&quot;)</span></span><br><span class="line">Book.objects.aggregate(boo_all_prices=Sum(<span class="string">&#x27;prices&#x27;</span>))</span><br><span class="line"><span class="comment"># 或者对单独一组的数据进行求和</span></span><br><span class="line">Book.objects.filter(publisher__name=<span class="string">&quot;成都工业&quot;</span>).aggregate(Sum(<span class="string">&#x27;prices&#x27;</span>))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 首先利用values函数进行分组，然后再利用annotate进行分组求和</span></span><br><span class="line">Book.objects.values(<span class="string">&quot;publisher&quot;</span>).annotate(Sum(<span class="string">&#x27;prices&#x27;</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 求每个出版社出的书的总的价格</span></span><br><span class="line"><span class="comment"># 对出版社进行分组，在对价格求和</span></span><br><span class="line">Book.objects.values(<span class="string">&quot;publisher__name&quot;</span>).annotate(Sum(<span class="string">&quot;prices&quot;</span>))</span><br></pre></td></tr></table></figure>
+<p>此外还一颗使用原生sql语句进行查询：</p>
+<p>详情：</p>
+<p><a target="_blank" rel="noopener" href="https://docs.djangoproject.com/zh-hans/3.0/ref/models/querysets/#extra">https://docs.djangoproject.com/zh-hans/3.0/ref/models/querysets/#extra</a><br>
+<a target="_blank" rel="noopener" href="https://docs.djangoproject.com/zh-hans/3.0/ref/models/querysets/#raw">https://docs.djangoproject.com/zh-hans/3.0/ref/models/querysets/#raw</a></p>
+<p>比如extra(), 和raw()</p>
+
+        </div>
+
+        <div class="article-nav">
+            
+                <div class="article-prev">
+                    <a class="prev btn"
+                       rel="prev"
+                       href="/2020/08/03/Django/Django%20-%20ORM%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/"
+                    >
+                        <i class="fa fa-chevron-left"></i> <span class="post-nav-title-item">Django - ORM常用操作</span><span class="post-nav-item">Prev posts</span>
+                    </a>
+                </div>
+            
+            
+                <div class="article-next">
+                    <a class="next btn"
+                       rel="next"
+                       href="/2020/08/03/Django/Django%20-%20admin%E7%AE%A1%E7%90%86/"
+                    >
+                        <span class="post-nav-title-item">Django - admin管理</span><span class="post-nav-item">Next posts</span> <i class="fa fa-chevron-right"></i>
+                    </a>
+                </div>
+            
+        </div>
+
+        <div class="comment-container">
+            <div class="comments-container">
+    
+</div>
+        </div>
+    </div>
+</div>
+
+    <div class="article-toc-container fade-in-down-animation">
+        <div class="article-toc">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        
+    </div>
+</div>
+        </div>
+    </div>
+
+
+                
+
+            </div>
+
+            
+
+        </main>
+
+        <div class="sidebar-tools">
+            <div class="tools-container">
+    <ul class="tools-list">
+        
+            <li class="search popup-trigger">
+                <i class="fa fa-search"></i>
+            </li>
+            
+<script src="/js/local-search.js"></script>
+
+        
+        <li class="mode-toggle">
+            <i class="fa fa-moon-o"></i>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+
+        
+            <div class="scroll-to-top">
+                <ul>
+                    <li>
+                        <!--<i class="fa fa-caret-up"></i>-->
+                        <span class="scroll-percent"></span>
+                    </li>
+                </ul>
+            </div>
+        
+    </div>
+
+    <div class="page-bottom">
+        <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy; 2020 <a href="/">ILS</a>
+        </div>
+
+
+        <a href="http://www.beian.miit.gov.cn/"  target="_blank">蜀ICP备20024492号</a>
+
+
+
+
+        
+    </div>
+</footer>
+
+    </div>
+</div>
+
+    <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-icon">
+            <i class="fa fa-search"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/js/main.js"></script>
+<script src="/js/header-shrink.js"></script>
+<script src="/js/toggle-mode.js"></script>
+
+
+
+    
+<script src="/js/scroll-to-top.js"></script>
+
+
+
+
+
+    
+        
+<script src="/js/code-copy.js"></script>
+
+    
+
+    
+        
+<script src="/lib/anime.min.js"></script>
+<script src="/js/toc.js"></script>
+
+    
+
+
+
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<!-- <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</body>
+</html>
